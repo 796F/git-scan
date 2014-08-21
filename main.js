@@ -1,3 +1,4 @@
-var Repositories = require('./Repositories.js');
+var Repositories = require('./models/Repositories.js');
+var Tor = require('./utils/Tor.js');
 
-console.log(Repositories.get("test"));
+console.log(Tor);
