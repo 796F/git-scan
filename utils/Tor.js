@@ -1,34 +1,41 @@
 var shttps = require('socks5-https-client');
-
-var options = {
-  socksPort: 9050, // Tor
-  port: 443,
-  hostname: 'en.wikipedia.org',
-  protocol: 'https:',
-  path: '/wiki/SOCKS'
-};
+var shttp = require('socks5-http-client');
 
 Tor = {
-  request : function () {
-    console.log(shttps);
-    var request = shttps.request(options, function(response) {
-      console.log(response);
-      console.log('STATUS: ' + response.statusCode);
-      console.log('HEADERS: ' + JSON.stringify(response.headers));
-      response.setEncoding('utf8');
-      response.on('data', function (chunk) {
-          console.log('BODY: ' + chunk);
-      });
+  CONTROL_PORT : 9051,
+  SOCKS_PORT : 9050,
+  AUTH : 'AUTHENTICATE\n',
+  NEWNYM : 'SIGNAL NEWNYM\r\n',
+
+  request : function (options, $callback) {
+    var agent = options.protocol === 'https:' ? shttps : shttp;
+    return agent.request(options, $callback);
+  },
+  init : function() {
+    Tor.socket = require('net').Socket();
+    Tor.socket.connect(Tor.CONTROL_PORT);
+
+    Tor.socket.on('data', function(data) {
+      console.log(data.toString());
+    });
+    Tor.socket.on('error', function(data) {
+      console.log(data.toString());
     });
 
-    request.on('error', function(e) {
-      console.log('problem with request: ' + e.message);
-    });
-
-    request.end();
-
-    //end request
+  },
+  startRandomizer : function(interval_in_ms, $callback) {
+    console.log('tell tor to change IP');
+    Tor.socket.write(Tor.AUTH);
+    Tor.socket.write(Tor.NEWNYM);
+    if($callback){
+      $callback();
+    }
+    setTimeout(function(){
+      Tor.startRandomizer(interval_in_ms, $callback)
+    }, interval_in_ms);
   }
 }
+
+
 
 module.exports = Tor;
