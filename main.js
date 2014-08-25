@@ -32,3 +32,6 @@ sendTestRequest = function() {
 
 Tor.init(); //initializes the tor control socket
 Tor.startRandomizer(10000, sendTestRequest); //pass randomizer a request function which gets called every interval of time.  
+
+
+Repositories.getUsers();
