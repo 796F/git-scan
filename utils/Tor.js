@@ -12,6 +12,7 @@ Tor = {
     return agent.request(options, $callback);
   },
   init : function() {
+    console.log('connect to tor control via socket ...');
     Tor.socket = require('net').Socket();
     Tor.socket.connect(Tor.CONTROL_PORT);
 
@@ -24,7 +25,7 @@ Tor = {
 
   },
   startRandomizer : function(interval_in_ms, $callback) {
-    console.log('tell tor to change IP');
+    console.log('start randomizer with interval: ' + interval_in_ms);
     Tor.socket.write(Tor.AUTH);
     Tor.socket.write(Tor.NEWNYM);
     if($callback){
