@@ -5,11 +5,11 @@ Repositories = {
   	while(true) {
 	  	var options = {
 		    host: 'api.github.com',
-		    path: '/search/repositories?q=+language:javascript+fork:false+created:>2014-01-01+pushed:>2014-06-01&per_page=100$page=2',
+		    path: '/search/repositories?q=+created:2014-04-05+language:javascript+fork:false&per_page=100&sort=updated&order=asc&page=2',
 		    method: 'GET',
 	        headers: {'user-agent': 'node.js'}
 		};
-
+		console.log("before request");
 	  	https.request(options, function(res) {
 		  var str = '';
 
@@ -18,13 +18,15 @@ Repositories = {
 		  });
 
 		  res.on('end', function() {
+		  	console.log("request ended");
 		  	var obj = JSON.parse(str);
 		  	var items = obj.items;
-		  	console.log(obj);
+		  	console.log(items);
 		  });
 		}).on('error', function(e) {
 		  console.error(e);
 		}).end();
+		break;
 	}
   }
 }
