@@ -1,0 +1,19 @@
+ControlPort 9051
+
+ClientOnly 1
+
+EnforceDistinctSubnets 0
+
+EntryNodes spfTOR1e1,spfTOR1e2,spfTOR1e3,spfTOR3,spfTOR4e1,spfTOR4e2,spfTOR4e3,spfTOR5e1,spfTOR5e2,spfTOR5e3,wagtail,chaoscomputerclub18,chaoscomputerclub19,chaoscomputerclub20,chaoscomputerclub21,chaoscomputerclub27,chaoscomputerclub28,chaoscomputerclub29,chaoscomputerclub30,chaoscomputerclub31,chaoscomputerclub32,chaoscomputerclub33,chaoscomputerclub34,DFRI0,DFRI1,DFRI2,DFRI3,DFRI4,assk,assk2,chomsky,edwardsnowden0,edwardsnowden1,edwardsnowden2,edwardsnowden3,hessel0,hessel1,hessel2,hessel3,amartysen,lumumba,politkovskaja,politkovskaja2,psilotorlu,rainbowwarrior,abbie,yahyaoui,Bornholm,DDR,marcuse1,marcuse2,ekumen,Lifuka,ph3x,srvph3xat,PsychoOnion1,PsychoOnion3,atticus,blanqui,enjolras,luxemburg,thoreau,dannenberg,dizum,gabelmoo,maatuska,Tonga,tor26,loki1,loki2,loki3,orion,orilla,destiny,chulak,aurora,kalach,remoc,invincibleAI,masterchief1,masterchief2,hviv100,hviv103,hviv104,hviv1020,hviv1021,hviv1022,hviv1023,hviv1024,hviv1025,hviv1026,hviv1027,hviv1028,hviv1029,IPredator,criticalcat,communicator,PrismCamp,ReflexZincIodide,ReflexZincIodide,digineo1,digineo2,vikingbjorn,vikinghelga,vikingolaf,vikinguthar
+
+ExcludeNodes agitator,173.228.89.229,coco,nini,109.163.235.243,n0deC,46.30.42.152,46.30.42.153,46.30.42.154,HKT01,HKT02,192.254.168.26,RunningOnFumes4,192.3.134.99,MackinFas,91.221.111.7,marian,82.78.165.30,198.58.115.210,Unnamed,default,{bh},{by},{mm},{cn},{mo},{tw},{cu},{ir},{kp},{sa},{sy},{tm},{uz},{vn},{eg},{er},{in},{kz},{my},{ru},{ua},{kr},{lk},{th},{tn},{tr},{ae},{am},{cd},{cy},{ci},{ps},{gq},{gn},{gw},{id},{iq},{il},{lb},{ml},{so},{sd},{zw},{mx},{co},{ng},{td},{ly},{cf},{et},{ye},{af},{pk},{bd},{la},{ph},{id},{kh},{au},{ca},{nz},{gb},{us},{ie},{??}
+
+ExcludeExitNodes {al},{dz},{ao},{az},{bj},{bt},{ba},{bn},{bg},{bf},{bi},{kh},{cm},{km},{cg},{dj},{ga},{gm},{ge},{gh},{hk},{hn},{jo},{kw},{kg},{lr},{mk},{mg},{mw},{mv},{mr},{mu},{yt},{mn},{me},{ma},{mz},{ne},{om},{rw},{qa},{sn},{sl},{sg},{sr},{sz},{tj},{tz},{tg},{ug},{ve},{dk},{be},{it},{fi},{no}
+
+ExitNodes spfTOR1e1,77.109.141.138,spfTOR1e2,77.109.141.139,spfTOR1e3,77.109.141.140,spfTOR3,62.220.135.129,spfTOR4e1,77.109.138.42,spfTOR4e2,77.109.138.43,spfTOR4e3,77.109.138.44,spfTOR5e1,77.109.139.26,spfTOR5e2,77.109.139.27,spfTOR5e3,77.109.139.28,gpfTOR6,62.212.67.209,wagtail,77.109.139.87,chaoscomputerclub18,31.172.30.1,chaoscomputerclub19,31.172.30.2,chaoscomputerclub20,31.172.30.3,chaoscomputerclub21,31.172.30.4,chaoscomputerclub31,217.115.10.131,chaoscomputerclub32,217.115.10.132,chaoscomputerclub33,217.115.10.133,chaoscomputerclub34,217.115.10.134,DFRI0,171.25.193.20,DFRI1,171.25.193.21,DFRI2,171.25.193.131,DFRI3,171.25.193.235,DFRI4,171.25.193.78,assk,78.108.63.46,assk2,78.108.63.44,abbie,chomsky,77.247.181.162,edwardsnowden0,109.163.234.7,edwardsnowden1,109.163.234.8,edwardsnowden2,109.163.234.9,edwardsnowden3,109.163.234.10,hessel0,109.163.234.2,hessel1,109.163.234.3,hessel2,109.163.234.4,hessel3,109.163.234.5,politkovskaja,politkovskaja2,77.247.181.165,psilotorlu,212.117.180.65,rainbowwarrior,77.247.181.164,amartysen,lumumba,77.247.181.163,yahyaoui,77.247.181.164,blanqui,thoreau,46.165.221.166,enjolras,81.89.96.88,luxemburg,81.89.96.89,PsychoOnion1,89.187.142.96,PsychoOnion3,89.187.142.208,marcuse1,178.20.55.16,marcuse2,178.20.55.18,ekumen,95.142.161.63,loki1,46.149.20.202,loki2,46.149.28.96,orion,94.242.246.24,orilla,94.242.252.41,destiny,94.242.246.23,chulak,37.221.161.234,aurora,37.221.161.235,masterchief1,79.134.235.5,masterchief2,79.134.234.200,hviv103,178.162.193.213,hviv104,192.42.116.16,IPredator,194.132.32.42,criticalcat,46.182.106.190,digineo1,87.118.91.140,digineo2,81.169.153.101,vikingbjorn,193.107.85.57,vikinghelga,193.107.85.56,vikingolaf,193.107.85.61,vikinguthar,193.107.85.62
+
+LongLivedPorts 21,22,80,443,706,1863,5050,5190,5222,5223,6523,6667,6697,8080,8300,9001,9030
+
+NumEntryGuards 8
+
+UseNTorHandshake 1

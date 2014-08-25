@@ -37,6 +37,4 @@ Tor = {
   }
 }
 
-
-
 module.exports = Tor;
