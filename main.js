@@ -46,7 +46,7 @@ Data.insertUser(test_user, function(result) {
   });
 });
 
-Repositories.getUsers();
+Repositories.getRespositories();
 // var options = {
 //   protocol: 'http:',
 //   hostname: 'www.telize.com',
