@@ -3,8 +3,10 @@ var https = require('https');
 function _getRemainingPages(dateString, totalObjects) {
 	var page = 2;
 	var order = "asc";
-	while(true) {
-		//IF THE PAGE IS EMPTY THEN BREAK
+	var numPages = Math.floor(totalObjects / 100);
+	if(numPages % 100 > 0) numPages++;
+	if(numPages > 20) numPages = 20;
+	for(var i = 1; i < numPages; i++) { 
 		if (page > 10 && order === "asc") {
 			page = 1;
 			order = "desc";
