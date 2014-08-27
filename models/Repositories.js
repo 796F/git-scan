@@ -1,6 +1,11 @@
 var https = require('https');
 var Data = require('./utils/Data.js');
 
+function _sleep(ms) {
+    var unixtime_ms = new Date().getTime();
+    while(new Date().getTime() < unixtime_ms + ms) {}
+}
+
 function _getRemainingPages(dateString, totalObjects) {
 	var page = 2;
 	var order = "asc";
@@ -11,6 +16,7 @@ function _getRemainingPages(dateString, totalObjects) {
 		if (page > 10 && order === "asc") {
 			page = 1;
 			order = "desc";
+			sleep(1000 * (60 * 2 + 5));
 		} 
 		var options = {
 		    host: 'api.github.com',
