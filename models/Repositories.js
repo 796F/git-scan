@@ -1,4 +1,5 @@
 var https = require('https');
+var Data = require('./utils/Data.js');
 
 function _getRemainingPages(dateString, totalObjects) {
 	var page = 2;
@@ -10,9 +11,7 @@ function _getRemainingPages(dateString, totalObjects) {
 		if (page > 10 && order === "asc") {
 			page = 1;
 			order = "desc";
-		} else if(page > 10) {
-			break;
-		}
+		} 
 		var options = {
 		    host: 'api.github.com',
 		    path: '/search/repositories?q=+created:' + dateString + '+language:javascript+fork:false&per_page=100&sort=updated&order=' + order + '&page=' + page,
@@ -31,6 +30,7 @@ function _getRemainingPages(dateString, totalObjects) {
 				if(obj.total_count !== 0) {
 					var items = obj.items;
 					console.log(items.id);
+					_addReposToDB(items);
 				}
 			});
 		}).on('error', function(e) {
@@ -38,6 +38,16 @@ function _getRemainingPages(dateString, totalObjects) {
 		}).end();
 		page++;
 	}
+}
+
+function _addReposToDB(repos) {
+	for (var i = 0; i < repos.length; i++) {
+		//add repo to database
+		Data.insertUser(repos[i].owner, function(result) {
+			var test_repo_id = Data.insertRepository(result.insertId, repos[i], function(r) {
+			});
+		});
+	};
 }
 
 Repositories = {
@@ -78,9 +88,7 @@ Repositories = {
 				var obj = JSON.parse(str);
 				if(obj.total_count !== 0) {
 					var items = obj.items;
-					for(var z = 0; z < items.length; z++) {
-						console.log(items[z].id);
-					}
+					_addReposToDB(items);
 					//_getRemainingPages(dateString, obj.total_count);
 				}
 			});
