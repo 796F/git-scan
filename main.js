@@ -125,6 +125,14 @@ Data.insertRequest(test_request, function(result) {
   });
 });
 
+Repositories.getRespositories();
+// var options = {
+//   protocol: 'http:',
+//   hostname: 'www.telize.com',
+//   socksPort: Tor.SOCKS_PORT,
+//   port: this.protocol === 'https:' ? 443 : 80,
+//   path: '/ip'
+// };
 
 
 
