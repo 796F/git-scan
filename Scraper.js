@@ -9,7 +9,7 @@ var Users = require('./models/Repositories.js');
 
 Scraper = {
   run : function (){
-
+    
     
 
     //make the request first, get the result.  
@@ -29,7 +29,7 @@ Scraper = {
     getRepositoriesForDay('2014-08-08') //this gives us a list of repos
     .then(saveRequest)
     .then(saveUser)
-    .then(saveRepositories)
+    .then(saveRepositories)x
 
 
     function getRepositoriesForDay(dateString) {
