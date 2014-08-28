@@ -1,80 +1,148 @@
-var Repositories = require('./models/Repositories.js');
+//get utils
 var Tor = require('./utils/Tor.js');
 var Data = require('./utils/Data.js');
+var Q = require('q');
 
+//get models
+var Repositories = require('./models/Repositories.js');
+var Users = require('./models/Repositories.js');
 
-var test_user = { 
-  "login": "ZebraRoy",
-  "id": 6883569,
-  "avatar_url": "https://avatars.githubusercontent.com/u/6883569?v=2",
-  "url": "https://api.github.com/users/ZebraRoy",
-  "type": "User",
-  "site_admin": false
-};
+Tor.init();                   //initializes the tor control socket
+Tor.startRandomizer(10000);   //start randomizing our exit ip
 
-Data.insertUser(test_user, function(result) {
+var test_data = {
+      "id": 18476263,
+      "name": "apps",
+      "full_name": "Grant42/apps",
+      "owner": {
+        "login": "Grant42",
+        "id": 5448265,
+        "avatar_url": "https://avatars.githubusercontent.com/u/5448265?v=2",
+        "gravatar_id": "ecee67b637c46f79c4dffe0529c25907",
+        "url": "https://api.github.com/users/Grant42",
+        "html_url": "https://github.com/Grant42",
+        "followers_url": "https://api.github.com/users/Grant42/followers",
+        "following_url": "https://api.github.com/users/Grant42/following{/other_user}",
+        "gists_url": "https://api.github.com/users/Grant42/gists{/gist_id}",
+        "starred_url": "https://api.github.com/users/Grant42/starred{/owner}{/repo}",
+        "subscriptions_url": "https://api.github.com/users/Grant42/subscriptions",
+        "organizations_url": "https://api.github.com/users/Grant42/orgs",
+        "repos_url": "https://api.github.com/users/Grant42/repos",
+        "events_url": "https://api.github.com/users/Grant42/events{/privacy}",
+        "received_events_url": "https://api.github.com/users/Grant42/received_events",
+        "type": "User",
+        "site_admin": false
+      },
+      "private": false,
+      "html_url": "https://github.com/Grant42/apps",
+      "description": "",
+      "fork": false,
+      "url": "https://api.github.com/repos/Grant42/apps",
+      "forks_url": "https://api.github.com/repos/Grant42/apps/forks",
+      "keys_url": "https://api.github.com/repos/Grant42/apps/keys{/key_id}",
+      "collaborators_url": "https://api.github.com/repos/Grant42/apps/collaborators{/collaborator}",
+      "teams_url": "https://api.github.com/repos/Grant42/apps/teams",
+      "hooks_url": "https://api.github.com/repos/Grant42/apps/hooks",
+      "issue_events_url": "https://api.github.com/repos/Grant42/apps/issues/events{/number}",
+      "events_url": "https://api.github.com/repos/Grant42/apps/events",
+      "assignees_url": "https://api.github.com/repos/Grant42/apps/assignees{/user}",
+      "branches_url": "https://api.github.com/repos/Grant42/apps/branches{/branch}",
+      "tags_url": "https://api.github.com/repos/Grant42/apps/tags",
+      "blobs_url": "https://api.github.com/repos/Grant42/apps/git/blobs{/sha}",
+      "git_tags_url": "https://api.github.com/repos/Grant42/apps/git/tags{/sha}",
+      "git_refs_url": "https://api.github.com/repos/Grant42/apps/git/refs{/sha}",
+      "trees_url": "https://api.github.com/repos/Grant42/apps/git/trees{/sha}",
+      "statuses_url": "https://api.github.com/repos/Grant42/apps/statuses/{sha}",
+      "languages_url": "https://api.github.com/repos/Grant42/apps/languages",
+      "stargazers_url": "https://api.github.com/repos/Grant42/apps/stargazers",
+      "contributors_url": "https://api.github.com/repos/Grant42/apps/contributors",
+      "subscribers_url": "https://api.github.com/repos/Grant42/apps/subscribers",
+      "subscription_url": "https://api.github.com/repos/Grant42/apps/subscription",
+      "commits_url": "https://api.github.com/repos/Grant42/apps/commits{/sha}",
+      "git_commits_url": "https://api.github.com/repos/Grant42/apps/git/commits{/sha}",
+      "comments_url": "https://api.github.com/repos/Grant42/apps/comments{/number}",
+      "issue_comment_url": "https://api.github.com/repos/Grant42/apps/issues/comments/{number}",
+      "contents_url": "https://api.github.com/repos/Grant42/apps/contents/{+path}",
+      "compare_url": "https://api.github.com/repos/Grant42/apps/compare/{base}...{head}",
+      "merges_url": "https://api.github.com/repos/Grant42/apps/merges",
+      "archive_url": "https://api.github.com/repos/Grant42/apps/{archive_format}{/ref}",
+      "downloads_url": "https://api.github.com/repos/Grant42/apps/downloads",
+      "issues_url": "https://api.github.com/repos/Grant42/apps/issues{/number}",
+      "pulls_url": "https://api.github.com/repos/Grant42/apps/pulls{/number}",
+      "milestones_url": "https://api.github.com/repos/Grant42/apps/milestones{/number}",
+      "notifications_url": "https://api.github.com/repos/Grant42/apps/notifications{?since,all,participating}",
+      "labels_url": "https://api.github.com/repos/Grant42/apps/labels{/name}",
+      "releases_url": "https://api.github.com/repos/Grant42/apps/releases{/id}",
+      "created_at": "2014-04-05T20:45:21Z",
+      "updated_at": "2014-07-16T22:37:46Z",
+      "pushed_at": "2013-12-18T12:14:53Z",
+      "git_url": "git://github.com/Grant42/apps.git",
+      "ssh_url": "git@github.com:Grant42/apps.git",
+      "clone_url": "https://github.com/Grant42/apps.git",
+      "svn_url": "https://github.com/Grant42/apps",
+      "homepage": "",
+      "size": 15556,
+      "stargazers_count": 0,
+      "watchers_count": 0,
+      "language": "JavaScript",
+      "has_issues": false,
+      "has_downloads": true,
+      "has_wiki": false,
+      "forks_count": 0,
+      "mirror_url": null,
+      "open_issues_count": 0,
+      "forks": 0,
+      "open_issues": 0,
+      "watchers": 0,
+      "default_branch": "master",
+      "score": 1.0
+    };
 
-  var test_repo = {
-    "id": 22758064,
-    "name": "Andy",
-    "owner" : test_user,
-    "full_name": "ZebraRoy/Andy",
-    "description": "",
-    "created_at": "2014-08-08T13:10:03Z",
-    "updated_at": "2014-08-08T13:10:23Z",
-    "pushed_at": "2014-08-24T13:38:23Z",
-    "homepage": null,
-    "size": 3408,
-    "stargazers_count": 0,
-    "watchers_count": 0,
-    "language": "JavaScript",
-    "has_issues": true,
-    "has_downloads": true,
-    "has_wiki": true,
-    "forks_count": 0,
-    "mirror_url": null,
-    "open_issues_count": 0,
-    "forks": 0,
-    "open_issues": 0,
-    "watchers": 0,
-    "default_branch": "master",
-    "score": 1.0
-  };
-  
-  var test_repo_id = Data.insertRepository(result.insertId, test_repo, function(r) {
-    
+test_request = {
+  query : '',
+  created : '2014-08-08', 
+  language : 'javascript',
+  fork : false,
+  per_page : 100,
+  sort : 'updated',
+  order : 'asc',
+  page_num : '1',
+  total_count : 1062,
+  incomplete_result : false
+}
+
+//make the request first, get the result.  
+
+Data.insertRequest(test_request, function(result) {
+  var request_id = result.insertId;
+  console.log(request_id);
+  Data.insertUser(test_data.owner, function(result) {
+    var user_id = result.insertId;
+    console.log(user_id);
+    Data.insertRepository(user_id, request_id, test_data, function(result) {
+      console.log(result);
+    });
   });
 });
 
-Repositories.getUsers();
-// var options = {
-//   protocol: 'http:',
-//   hostname: 'www.telize.com',
-//   socksPort: Tor.SOCKS_PORT,
-//   port: this.protocol === 'https:' ? 443 : 80,
-//   path: '/ip'
-// };
 
-// sendTestRequest = function() {
-//   var request = Tor.request(options, function(response){
-//     console.log('STATUS: ' + response.statusCode);
-//     console.log('HEADERS: ' + JSON.stringify(response.headers));
-//     response.setEncoding('utf8');
-//     response.on('data', function (chunk) {
-//       console.log('BODY: ' + chunk);
-//     });
-//     response.on('end', function(data) {
-//       console.log('END: ', data);
-//     });
 
+
+// Repositories.getRepositoryForDay('2014-08-08') //this gives us a list of repos
+// .then(injectRequestObject)
+// .then(saveAllRepos)
+
+
+// function getRepositoryForDay(dateString) {
+//   return Q.Promise(function(resolve, reject, notify) {
+//     //make request to api.github.com, resolve if http status 200
+//     setTimeout(function(){
+//       console.log('got all repos for day', dateString);
+//       resolve(['hello', 'world']);
+//     }, 1000);
 //   });
-
-//   request.on('error', function(e) {
-//     console.log('problem with request: ' + e.message);
-//   });
-
-//   request.end();
 // }
 
-// Tor.init(); //initializes the tor control socket
-// Tor.startRandomizer(10000, sendTestRequest); //pass randomizer a request function which gets called every interval of time.  
+// function injectOwnerObject(resultArray) {
+//   console.log(resultArray);
+// }

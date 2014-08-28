@@ -1,39 +1,30 @@
+//this file handles requests sent through tor, as well as controlling tor using their signal protocol
+
 var shttps = require('socks5-https-client');
 var shttp = require('socks5-http-client');
+var Config = require('../config/config.js');
 
 Tor = {
-  CONTROL_PORT : 9051,
-  SOCKS_PORT : 9050,
-  AUTH : 'AUTHENTICATE\n',
-  NEWNYM : 'SIGNAL NEWNYM\r\n',
-
   request : function (options, $callback) {
     var agent = options.protocol === 'https:' ? shttps : shttp;
     return agent.request(options, $callback);
   },
   init : function() {
-    console.log('connect to tor control via socket ...');
+    console.log('Connect to Tor control via socket ...');
     Tor.socket = require('net').Socket();
-    Tor.socket.connect(Tor.CONTROL_PORT);
+    Tor.socket.connect(Config.Tor.controlPort);
+    Tor.socket.write(Config.Tor.authSignal);
 
     Tor.socket.on('data', function(data) {
-      console.log(data.toString());
+      console.log('Tor data says', data.toString());
     });
-    Tor.socket.on('error', function(data) {
-      console.log(data.toString());
+    Tor.socket.on('error', function(error) {
+      console.log('Tor error says:', error.toString());
     });
-
   },
-  startRandomizer : function(interval_in_ms, $callback) {
-    console.log('start randomizer with interval: ' + interval_in_ms);
-    Tor.socket.write(Tor.AUTH);
-    Tor.socket.write(Tor.NEWNYM);
-    if($callback){
-      $callback();
-    }
-    setTimeout(function(){
-      Tor.startRandomizer(interval_in_ms, $callback)
-    }, interval_in_ms);
+  startRandomizer : function(interval_in_ms) {
+    Tor.socket.write(Config.Tor.randomIpSignal);
+    setTimeout(Tor.startRandomizer, interval_in_ms, interval_in_ms);
   }
 }
 

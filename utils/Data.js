@@ -1,20 +1,31 @@
-var mysql = require('mysql');
+//This module handles all data queries to mysql.  
 
-var connection = mysql.createConnection({
-  user : 'root',
-  host : 'localhost',
-  port : 3306,
-  password : '',
-  database : 'git_scan_db',
-  debug : false
+var Config = require('../config/config.js');
+var mysql = require('mysql');
+var connection = mysql.createConnection(Config.Mysql);
+
+connection.connect(function(err) {
+  if (err) {
+    console.error('error connecting: ' + err.stack);
+    return;
+  }else{
+    console.log('MYSQL connected as id ' + connection.threadId);  
+  }
 });
 
-connection.connect();
-
 Data = {
-  insertRepository : function (ownerId, repositoryObject, $callback) {
+  insertRequest : function(requestObject, $callback) {
+    connection.query('INSERT INTO requests SET ?', requestObject, function (err, result) {
+      if (err) 
+        throw err;
+      else
+        $callback(result);
+    });
+  },
+  insertRepository : function (ownerId, requestId, repositoryObject, $callback) {
     repositoryObject.owner_id = ownerId;
- 
+    repositoryObject.request_id = requestId;
+
     //delete unused properties
     delete repositoryObject.owner;
     delete repositoryObject.private;
@@ -60,7 +71,7 @@ Data = {
     delete repositoryObject.ssh_url;
     delete repositoryObject.clone_url;
     delete repositoryObject.svn_url;
-
+    
     //clean ISO8601 timestamps to mysql compliant format
     repositoryObject.created_at = cleanTimestamp(repositoryObject.created_at);
     repositoryObject.updated_at = cleanTimestamp(repositoryObject.updated_at);
