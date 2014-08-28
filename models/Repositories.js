@@ -2,6 +2,8 @@ var https = require('https');
 var Data = require('../utils/Data.js');
 var strftime = require('strftime');
 
+var totalCount = 1;
+
 function _sleep(ms) {
     var unixtime_ms = new Date().getTime();
     while(new Date().getTime() < unixtime_ms + ms) {}
@@ -36,8 +38,12 @@ function _getRemainingPages(dateString, totalObjects) {
 				var obj = JSON.parse(str);
 				if(obj.total_count !== 0) {
 					var items = obj.items;
-					console.log(items.id);
-					_addReposToDB(items);
+          for(var i = 0; i < items.length; i++) {
+            console.log(totalCount);
+            totalCount++;
+            console.log(items[i]);
+          }
+					//_addReposToDB(items);
 				}
 			});
 		}).on('error', function(e) {
@@ -87,7 +93,12 @@ Repositories = {
   				var obj = JSON.parse(str);
   				if(obj.total_count !== 0) {
   					var items = obj.items;
-  					_addReposToDB(items);
+  					//_addReposToDB(items);
+            for(var i = 0; i < items.length; i++) {
+              console.log(totalCount);
+              totalCount++;
+              console.log(items[i]);
+            }
   					_getRemainingPages(dateString, obj.total_count);
   				}
   			});

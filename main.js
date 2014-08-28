@@ -7,8 +7,10 @@ var Q = require('q');
 var Repositories = require('./models/Repositories.js');
 var Users = require('./models/Repositories.js');
 
+/*
 Tor.init();                   //initializes the tor control socket
 Tor.startRandomizer(10000);   //start randomizing our exit ip
+
 
 var test_data = {
       "id": 18476263,
@@ -124,8 +126,9 @@ Data.insertRequest(test_request, function(result) {
     });
   });
 });
+*/
 
-Repositories.getRespositories();
+Repositories.getRepositories();
 // var options = {
 //   protocol: 'http:',
 //   hostname: 'www.telize.com',
