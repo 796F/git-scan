@@ -4,7 +4,7 @@ var Data = require('./utils/Data.js');
 var Q = require('q');
 
 //get models
-var Repositories = require('./models/Repositories.js');
+var Scraper = require("./Scraper");
 var Users = require('./models/Repositories.js');
 
 /*
@@ -128,7 +128,7 @@ Data.insertRequest(test_request, function(result) {
 });
 */
 
-Repositories.getRepositories();
+Scraper.scrapeRepos();
 // var options = {
 //   protocol: 'http:',
 //   hostname: 'www.telize.com',
