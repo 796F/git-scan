@@ -8,7 +8,8 @@
     "q" : "1.0.1",
     "mysql" : "2.4.3",
     "socks5-https-client" : "0.2.2",
-    "socks5-http-client" : "0.1.6"
+    "socks5-http-client" : "0.1.6",
+    "strftime" : "0.8.2"
   }
 
 }

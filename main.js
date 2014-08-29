@@ -4,9 +4,11 @@ var Data = require('./utils/Data.js');
 var Q = require('q');
 
 //get models
-var Repositories = require('./models/Repositories.js');
+var Scraper = require("./Scraper");
 var Users = require('./models/Repositories.js');
+var strftime = require('strftime');
 
+/*
 Tor.init();                   //initializes the tor control socket
 Tor.startRandomizer(10000);   //start randomizing our exit ip
 
@@ -124,7 +126,15 @@ Data.insertRequest(test_request, function(result) {
     });
   });
 });
+*/
 
+// var options = {
+//   protocol: 'http:',
+//   hostname: 'www.telize.com',
+//   socksPort: Tor.SOCKS_PORT,
+//   port: this.protocol === 'https:' ? 443 : 80,
+//   path: '/ip'
+// };
 
 
 
@@ -146,3 +156,14 @@ Data.insertRequest(test_request, function(result) {
 // function injectOwnerObject(resultArray) {
 //   console.log(resultArray);
 // }
+var today = new Date();
+    
+var date = new Date(2014, 0, 1);
+while(true) {
+  if(date === today) break;
+
+  var dateString = strftime('%F', date);
+  Scraper.getRepositoriesForDay(dateString);
+  date.setDate(date.getDate()+1);    
+  break;
+}
