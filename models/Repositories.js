@@ -1,15 +1,16 @@
-var https = require('https');
-var Data = require('./utils/Data.js');
+var _ = require('underscore');
+var Tor = require('../utils/Tor.js');
+var Data = require('../utils/Data.js');
 
 Repositories = {
   getRepositories : function (urlPath, callback) {
-    var options = {
-        host: 'api.github.com',
-        path: urlPath,
-        method: 'GET',
-        headers: {'user-agent': 'node.js'}
-    };
-    https.request(options, function(res) {
+
+    var options = _.extend({}, GITHUB_API_HTTPS);
+    options.path = urlPath;
+
+    console.log(options);
+
+    Tor.request(options, function(res) {
       var str = '';
 
       res.on('data', function(d) {
@@ -21,7 +22,8 @@ Repositories = {
       });
     }).on('error', function(e) {
       console.error(e);
-    }).end();
+    });
+
   },
 
   addReposToDB: function(repos) {

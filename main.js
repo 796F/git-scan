@@ -22,7 +22,8 @@ GLOBAL.GITHUB_API_HTTPS = {
   hostname: 'api.github.com',
   socksPort: TOR_SOCKS_PORT,
   port: 443,
-  path: '/'
+  path: '/',
+  headers: {'user-agent': 'node.js'}
 }
 
 GLOBAL.GITHUB_API_HTTP = {
