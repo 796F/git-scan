@@ -3,13 +3,13 @@
 var mysql = require('mysql');
 var connection = mysql.createConnection(MYSQL_CONFIG);
 
-connection.connect(function(err) {
-  if (err) {
-    console.error('error connecting: ' + err.stack);
-    return;
-  }else{
-    console.log('MYSQL connected as id ' + connection.threadId);  
-  }
+var connection = mysql.createConnection({
+  user : 'root',
+  host : 'localhost',
+  port : 3306,
+  password : '',
+  database : 'git_scan_db',
+  debug : false
 });
 
 Data = {
@@ -109,5 +109,6 @@ cleanTimestamp = function(timeString) {
   // expect 2014-08-08T13:10:03Z -> 2014-08-08 13:10:03
   return timeString.replace("T", " ").replace("Z", "");
 }
+
 
 module.exports = Data;

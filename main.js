@@ -39,9 +39,11 @@ var Data = require('./utils/Data.js');
 var Q = require('q');
 
 //get models
-var Repositories = require('./models/Repositories.js');
+var Scraper = require("./Scraper");
 var Users = require('./models/Repositories.js');
+var strftime = require('strftime');
 
+/*
 Tor.init();                   //initializes the tor control socket
 Tor.startRandomizer(10000);   //start randomizing our exit ip
 
@@ -159,7 +161,15 @@ Data.insertRequest(test_request, function(result) {
     });
   });
 });
+*/
 
+// var options = {
+//   protocol: 'http:',
+//   hostname: 'www.telize.com',
+//   socksPort: Tor.SOCKS_PORT,
+//   port: this.protocol === 'https:' ? 443 : 80,
+//   path: '/ip'
+// };
 
 
 
@@ -178,6 +188,7 @@ Data.insertRequest(test_request, function(result) {
 //   });
 // }
 
+
 // require('./models/Issues.js').getIssuesForRepository('Famous', 'famous', 'closed');
 
 Tor.request({ 
@@ -187,15 +198,30 @@ Tor.request({
   port: 443,
   path: '/repos/Famous/famous/issues?state=closed&per_page=100&page=1',
   headers: { 'User-Agent' : 'xiamike' }
-  }, 
-  function(response) {
-    console.log('STATUS: ' + response.statusCode);
-    console.log('HEADERS: ' + JSON.stringify(response.headers));
-    response.setEncoding('utf8');
-    response.on('data', function (chunk) {
-      console.log('BODY: ' + chunk);
-    });
-    response.on('end', function(data) {
-      console.log('END: ', data);
-    });
+},
+function(response) {
+  console.log('STATUS: ' + response.statusCode);
+  console.log('HEADERS: ' + JSON.stringify(response.headers));
+  response.setEncoding('utf8');
+  response.on('data', function (chunk) {
+    console.log('BODY: ' + chunk);
   });
+  response.on('end', function(data) {
+    console.log('END: ', data);
+  });
+});
+
+// function injectOwnerObject(resultArray) {
+//   console.log(resultArray);
+// }
+var today = new Date();
+    
+var date = new Date(2014, 0, 1);
+while(true) {
+  if(date === today) break;
+
+  var dateString = strftime('%F', date);
+  Scraper.getRepositoriesForDay(dateString);
+  date.setDate(date.getDate()+1);    
+  break;
+}
