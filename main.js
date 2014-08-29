@@ -6,11 +6,11 @@ var Q = require('q');
 //get models
 var Scraper = require("./Scraper");
 var Users = require('./models/Repositories.js');
+var strftime = require('strftime');
 
 /*
 Tor.init();                   //initializes the tor control socket
 Tor.startRandomizer(10000);   //start randomizing our exit ip
-
 
 var test_data = {
       "id": 18476263,
@@ -128,7 +128,6 @@ Data.insertRequest(test_request, function(result) {
 });
 */
 
-Scraper.scrapeRepos();
 // var options = {
 //   protocol: 'http:',
 //   hostname: 'www.telize.com',
@@ -157,3 +156,14 @@ Scraper.scrapeRepos();
 // function injectOwnerObject(resultArray) {
 //   console.log(resultArray);
 // }
+var today = new Date();
+    
+var date = new Date(2014, 0, 1);
+while(true) {
+  if(date === today) break;
+
+  var dateString = strftime('%F', date);
+  Scraper.getRepositoriesForDay(dateString);
+  date.setDate(date.getDate()+1);    
+  break;
+}
