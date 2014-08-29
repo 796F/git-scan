@@ -8,7 +8,7 @@ UTIL = {
   },
   buildUrlWithPath : function (/* endpoint args */) {
     var args = arguments;
-    return '/' + Object.keys(args).map(function(key, value, test) {
+    return Object.keys(args).map(function(key, value, test) {
       return args[key];
     }).join('/');
   },
