@@ -3,8 +3,8 @@ var Data = require('./utils/Data.js');
 var strftime = require('strftime');
 
 function _sleep(ms) {
-    var unixtime_ms = new Date().getTime();
-    while(new Date().getTime() < unixtime_ms + ms) {}
+  var unixtime_ms = new Date().getTime();
+  while(new Date().getTime() < unixtime_ms + ms) {}
 }
 
 function _getRemainingPages(dateString, totalObjects) {
@@ -20,10 +20,10 @@ function _getRemainingPages(dateString, totalObjects) {
 			sleep(1000 * (60 * 2 + 5));
 		} 
 		var options = {
-		    host: 'api.github.com',
-		    path: '/search/repositories?q=+created:' + dateString + '+language:javascript+fork:false&per_page=100&sort=updated&order=' + order + '&page=' + page,
-		    method: 'GET',
-		    headers: {'user-agent': 'node.js'}
+		  host: 'api.github.com',
+		  path: '/search/repositories?q=+created:' + dateString + '+language:javascript+fork:false&per_page=100&sort=updated&order=' + order + '&page=' + page,
+		  method: 'GET',
+		  headers: {'user-agent': 'node.js'}
 		};
 		https.request(options, function(res) {
 			var str = '';
