@@ -9,51 +9,51 @@ function _sleep(ms) {
 }
 
 function _getRemainingPages(dateString, totalObjects) {
-	var page = 2;
-	var order = "asc";
-	var numPages = Math.floor(totalObjects / 100);
-	if(numPages % 100 > 0) numPages++;
-	if(numPages > 20) numPages = 20;
-	for(var i = 1; i < numPages; i++) { 
-		if (page > 10 && order === "asc") {
-			page = 1;
-			order = "desc";
-			sleep(1000 * (60 * 2 + 5));
-		} 
-		var urlPath = '/search/repositories?q=+created:' + dateString + '+language:javascript+fork:false&per_page=100&sort=updated&order=' + order + '&page=' + page;
-		Repositories.getRepositories(urlPath, function(str) {
-			var obj = JSON.parse(str);
-			if(obj.total_count !== 0) {
-				var items = obj.items;
-				for(var i = 0; i < items.length; i++) {
-					console.log(items[i]);
-				}
-				//_addReposToDB(items);
-			}
-		});
-		page++;
-	}
+  var page = 2;
+  var order = "asc";
+  var numPages = Math.floor(totalObjects / 100);
+  if(numPages % 100 > 0) numPages++;
+  if(numPages > 20) numPages = 20;
+  for(var i = 1; i < numPages; i++) { 
+    if (page > 10 && order === "asc") {
+      page = 1;
+      order = "desc";
+      sleep(1000 * (60 * 2 + 5));
+    } 
+    var urlPath = '/search/repositories?q=+created:' + dateString + '+language:javascript+fork:false&per_page=100&sort=updated&order=' + order + '&page=' + page;
+    Repositories.getRepositories(urlPath, function(str) {
+      var obj = JSON.parse(str);
+      if(obj.total_count !== 0) {
+        var items = obj.items;
+        for(var i = 0; i < items.length; i++) {
+          console.log(items[i]);
+        }
+        //_addReposToDB(items);
+      }
+    });
+    page++;
+  }
 }
 
 Scraper = {
   getRepositoriesForDay : function (dateString){ 
     //make the request first, get the result.  
-  	var page = 1;
-  	var order = "asc";
-  	var urlPath = '/search/repositories?q=+created:' + dateString + '+language:javascript+fork:false&per_page=100&sort=updated&order=' + order + '&page=' + page;
-  	Repositories.getRepositories(urlPath, function(str) {
-  		console.log("String " + str);
-  		var obj = JSON.parse(str);
-			if(obj.total_count !== 0) {
-				var items = obj.items;
-				for (var i = 0; i < items.length; i++) {
-					console.log(items[i]);
-				};
-				//_addReposToDB(items);
-				_getRemainingPages(dateString, obj.total_count);
-			}
-  	});
-	}
+    var page = 1;
+    var order = "asc";
+    var urlPath = '/search/repositories?q=+created:' + dateString + '+language:javascript+fork:false&per_page=100&sort=updated&order=' + order + '&page=' + page;
+    Repositories.getRepositories(urlPath, function(str) {
+      console.log("String " + str);
+      var obj = JSON.parse(str);
+      if(obj.total_count !== 0) {
+        var items = obj.items;
+        for (var i = 0; i < items.length; i++) {
+          console.log(items[i]);
+        };
+        //_addReposToDB(items);
+        _getRemainingPages(dateString, obj.total_count);
+      }
+    });
+  }
 
 /*
     getRepositoriesForDay('2014-08-08') //this gives us a list of repos
