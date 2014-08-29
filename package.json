@@ -6,6 +6,7 @@
   
   "dependencies" : { 
     "q" : "1.0.1",
+    "underscore" : "1.7.0",
     "mysql" : "2.4.3",
     "socks5-https-client" : "0.2.2",
     "socks5-http-client" : "0.1.6"

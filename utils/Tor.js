@@ -2,18 +2,17 @@
 
 var shttps = require('socks5-https-client');
 var shttp = require('socks5-http-client');
-var Config = require('../config/config.js');
 
 Tor = {
   request : function (options, $callback) {
     var agent = options.protocol === 'https:' ? shttps : shttp;
-    return agent.request(options, $callback);
+    return agent.get(options, $callback);
   },
   init : function() {
     console.log('Connect to Tor control via socket ...');
     Tor.socket = require('net').Socket();
-    Tor.socket.connect(Config.Tor.controlPort);
-    Tor.socket.write(Config.Tor.authSignal);
+    Tor.socket.connect(TOR_CONTROL_PORT);
+    Tor.socket.write(TOR_AUTH_SIGNAL);
 
     Tor.socket.on('data', function(data) {
       console.log('Tor data says', data.toString());
@@ -23,7 +22,7 @@ Tor = {
     });
   },
   startRandomizer : function(interval_in_ms) {
-    Tor.socket.write(Config.Tor.randomIpSignal);
+    Tor.socket.write(TOR_RANDOM_IP_SIGNAL);
     setTimeout(Tor.startRandomizer, interval_in_ms, interval_in_ms);
   }
 }

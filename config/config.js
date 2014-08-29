@@ -1,28 +1,31 @@
-//this file houses all configuration for database, tor, api endpoints, etc.  
+//MOVED TO GLOBALS.js in PROJECT ROOT
 
-Config = {}
+// //this file houses all configuration for database, tor, api endpoints, etc.  
 
-Config.Mysql = {
-  user : 'root',
-  host : 'localhost',
-  port : 3306,
-  password : '',
-  database : 'git_scan_db',
-  debug : false
-}
+// Config = {}
 
-Config.Tor = {
-  controlPort : 9051,
-  socksPort : 9050,
-  authSignal : 'AUTHENTICATE\n',
-  randomIpSignal : 'SIGNAL NEWNYM\r\n'
-}
+// Config.Mysql = {
+//   user : 'root',
+//   host : 'localhost',
+//   port : 3306,
+//   password : '',
+//   database : 'git_scan_db',
+//   debug : false
+// }
 
-Config.Github = {
-  protocol: 'https:',
-  hostname: 'api.github.com',
-  socksPort: Config.Tor.socksPort,
-  port: this.protocol === 'https:' ? 443 : 80
-}
+// Config.Tor = {
+//   controlPort : 9051,
+//   socksPort : 9050,
+//   authSignal : 'AUTHENTICATE\n',
+//   randomIpSignal : 'SIGNAL NEWNYM\r\n'
+// }
 
-module.exports = Config;
+// Config.Github = {
+//   protocol: 'https:',
+//   hostname: 'api.github.com',
+//   socksPort: Config.Tor.socksPort,
+//   port: this.protocol === 'https:' ? 443 : 80,
+//   path: 'https://api.github.com'
+// }
+
+// module.exports = Config;

@@ -1,8 +1,7 @@
 //This module handles all data queries to mysql.  
 
-var Config = require('../config/config.js');
 var mysql = require('mysql');
-var connection = mysql.createConnection(Config.Mysql);
+var connection = mysql.createConnection(MYSQL_CONFIG);
 
 connection.connect(function(err) {
   if (err) {

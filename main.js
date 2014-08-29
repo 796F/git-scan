@@ -1,3 +1,38 @@
+var _ = require('underscore');
+
+_.extend(GLOBAL, {
+  GITHUB_API_ROOT_URL : 'https://api.github.com',
+  TOR_SOCKS_PORT : 9050,
+  TOR_CONTROL_PORT : 9051,
+  TOR_AUTH_SIGNAL : 'AUTHENTICATE\n',
+  TOR_RANDOM_IP_SIGNAL : 'SIGNAL NEWNYM\r\n',
+});
+
+GLOBAL.MYSQL_CONFIG = {
+  user : 'root',
+  host : 'localhost',
+  port : 3306,
+  password : '',
+  database : 'git_scan_db',
+  debug : false
+}
+
+GLOBAL.GITHUB_API_HTTPS = {
+  protocol: 'https:',
+  hostname: 'api.github.com',
+  socksPort: TOR_SOCKS_PORT,
+  port: 443,
+  path: '/'
+}
+
+GLOBAL.GITHUB_API_HTTP = {
+  protocol: 'http',
+  hostname: 'api.github.com',
+  socksPort: TOR_SOCKS_PORT,
+  port: 80,
+  path: '/'
+}
+
 //get utils
 var Tor = require('./utils/Tor.js');
 var Data = require('./utils/Data.js');
@@ -143,6 +178,24 @@ Data.insertRequest(test_request, function(result) {
 //   });
 // }
 
-// function injectOwnerObject(resultArray) {
-//   console.log(resultArray);
-// }
+// require('./models/Issues.js').getIssuesForRepository('Famous', 'famous', 'closed');
+
+Tor.request({ 
+  protocol: 'https:',
+  hostname: 'api.github.com',
+  socksPort: 9050,
+  port: 443,
+  path: '/repos/Famous/famous/issues?state=closed&per_page=100&page=1',
+  headers: { 'User-Agent' : 'xiamike' }
+  }, 
+  function(response) {
+    console.log('STATUS: ' + response.statusCode);
+    console.log('HEADERS: ' + JSON.stringify(response.headers));
+    response.setEncoding('utf8');
+    response.on('data', function (chunk) {
+      console.log('BODY: ' + chunk);
+    });
+    response.on('end', function(data) {
+      console.log('END: ', data);
+    });
+  });
