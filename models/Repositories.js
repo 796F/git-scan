@@ -4,28 +4,35 @@ var Data = require('../utils/Data.js');
 var Util = require('../utils/Utility.js');
 var Q = require('q');
 
+var language = 'javascript';
+
 Repositories = {
-  getRepositoriesForDay : function (dateString) {
-
-    //call get getRepositoriesForDayAndPage once, get totla_count
-
-    var options = _.extend({}, GITHUB_API_HTTPS);
-    options.path = urlPath;
-
-    Tor.request(options, function(res) {
-      var str = '';
-
-      res.on('data', function(d) {
-        str += d;
+  
+  getForDay : function(dateString) {
+    return Q.promise(function(resolve, reject, notify) {
+      var end = 'head';
+      Repositories.getForParams(dateString, 1, language, end)
+      .then(function(data) {
+        var promises = [];
+        var objects = [];
+        objects.concat(data);
+        var numRepos = data.total_count;
+        var numPages = Math.ceil(numRepos / 100);
+        if(numPages > 20) numPages = 20;
+        for (var i = 2; i <= numPages; i++) {
+          if (i > 10 && end === 'head') end = 'tail';
+          var promise = Repositories.getForParams(dateString, i, language, end);
+          promise.then(function(data) {
+            objects.concat(data);
+          });
+          promises.push(promise);
+        };
+        Q.all(promises)
+        .then(function(objects) {
+          resolve(objects);
+        });
       });
-
-      res.on('end', function() {
-        callback(str);
-      });
-    }).on('error', function(e) {
-      console.error(e);
     });
-
   },
   /*
   *   dateString is a string in format '2014-08-08',
@@ -35,8 +42,7 @@ Repositories = {
   *
   *   returns a promise which will be resolved when api request finishes.  
   */
-  getRepositoriesForParams : function (dateString, page_num, language, end) {
-    
+  getForParams : function(dateString, page_num, language, end) {
     var endpoint = Util.buildUrlWithPath(GITHUB_API_ROOT_URL, 'search', 'repositories');
 
     var params = Util.buildUrlEncodedParameters({

@@ -1,4 +1,5 @@
 var Repositories = require('../models/Repositories.js');
+var strftime = require('strftime');
 
 Test = {
   testTorRequest : function() {

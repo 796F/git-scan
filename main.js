@@ -47,4 +47,4 @@ var strftime = require('strftime');
 Tor.init();                   //initializes the tor control socket
 Tor.startRandomizer(10000);   //start randomizing our exit ip
 
-require('./test/test.js').testParamGenerator();
+require('./test/test.js').testGetRepos();
