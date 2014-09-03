@@ -5,26 +5,9 @@ var Util = require('../utils/Utility.js');
 var Q = require('q');
 
 Repositories = {
-  getRepositoriesForDay : function (dateString) {
+  getForDay : function (dateString) {
 
     //call get getRepositoriesForDayAndPage once, get totla_count
-
-    var options = _.extend({}, GITHUB_API_HTTPS);
-    options.path = urlPath;
-
-    Tor.request(options, function(res) {
-      var str = '';
-
-      res.on('data', function(d) {
-        str += d;
-      });
-
-      res.on('end', function() {
-        callback(str);
-      });
-    }).on('error', function(e) {
-      console.error(e);
-    });
 
   },
   /*
@@ -35,9 +18,9 @@ Repositories = {
   *
   *   returns a promise which will be resolved when api request finishes.  
   */
-  getRepositoriesForParams : function (dateString, page_num, language, end) {
+  getForParams : function (dateString, page_num, language, end) {
     
-    var endpoint = Util.buildUrlWithPath(GITHUB_API_ROOT_URL, 'search', 'repositories');
+    var endpoint = Util.buildUrlWithPath('search', 'repositories');
 
     var params = Util.buildUrlEncodedParameters({
       q : Util.buildGithubSearchQualifiers({
