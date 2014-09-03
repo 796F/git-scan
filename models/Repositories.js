@@ -4,10 +4,10 @@ var Data = require('../utils/Data.js');
 var Util = require('../utils/Utility.js');
 var Q = require('q');
 
-var language = 'javascript';
-
 MAX_PAGES = 20;
 REPOS_PER_PAGE = 100;
+
+var language = 'javascript';
 
 Repositories = {
   

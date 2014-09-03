@@ -2,33 +2,83 @@
 
 var Util = require('../utils/Utility.js');
 var _ = require('underscore');
+var Q = require('q');
+var Tor = require('../utils/Tor.js');
+
+FIRST_PAGE = 1;
 
 Issues = {
-  getIssuesForRepository : function (owner, repository, state) {
-    //https://api.github.com/repos/Famous/famous/issues?state=all&per_page=1000&page=1
-    var url_params = Util.buildUrlEncodedParameters({
-      state: state, 
-      per_page: 100, 
-      page: 1
-    });
-    var endpoint = Util.buildUrlWithPath('repos', owner, repository, 'issues');
-    
-    var githubUrlOptions = {
-      protocol: 'https:',
-      hostname: 'api.github.com',
-      socksPort: TOR_SOCKS_PORT,
-      port: 443,
-      path: endpoint + url_params
-    };
-    console.log(githubUrlOptions)
-    Tor.request(githubUrlOptions, function(result) {
-      console.log(result);
+  getAllForRepository : function (owner, repository) {
+
+  },
+  getClosedForRepository : function (owner, repository) {
+    return Issues.getForParams(owner, repository, 'closed');
+  },
+  getOpenForRepository : function (owner, repository) {
+    return Issues.getForParams(owner, repository, 'open');
+  },
+  /*
+  *   owner is string ie 'Famous' or 'xiamike'
+  *   repository is string ie 'famous-internal' or 'git-scan'
+  *   state is string either 'open' or 'closed'
+  *   page_num is int from 1 to last page
+  *   returns a promise which resolves to an array [] of issue objects.  
+  */
+  getForParams : function (owner, repository, state) {
+    //return a promise which recursively makes requests then resolves.
+    return Q.Promise(function(resolve, reject, notify) {
+
+      var params = {
+        state: state, 
+        per_page: 100, 
+        page: FIRST_PAGE
+      };
+
+      function _recursivelyRequestAndBuildIssues(owner, repository, params, issues, $resolveFn, $rejectFn) {
+        var endpoint = Util.buildUrlWithPath('repos', owner, repository, 'issues');
+
+        var options = _.extend({}, GITHUB_API_HTTPS);
+        options.path = endpoint + Util.buildUrlEncodedParameters(params);
+
+        Tor.request(options, function(response){
+          data = '';
+          response.on('data', function (chunk) {
+            data += chunk;
+          });
+          response.on('end', function(){
+            var result = JSON.parse(data);
+            if(result.length > 0){
+              params.page++;
+              _recursivelyRequestAndBuildIssues(
+                owner, 
+                repository, 
+                params, 
+                issues.concat(result), 
+                $resolveFn, 
+                $rejectFn
+              );
+            }else{
+              console.log(issues.length);
+              $resolveFn(issues);
+            }
+          });
+          response.on('error', function(error) {
+            console.log('error!');
+            $rejectFn(error);
+          });
+        });
+      }
+
+      _recursivelyRequestAndBuildIssues(owner, repository, params, [], resolve, reject);
+
     });
   },
-  saveIssues : function (issuesList) {
+  save : function (issuesList) {
 
   }
 }
 
 
+
 module.exports = Issues;
+
