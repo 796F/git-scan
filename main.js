@@ -38,6 +38,7 @@ GLOBAL.GITHUB_API_HTTP = {
 var Tor = require('./utils/Tor.js');
 var Data = require('./utils/Data.js');
 var Q = require('q');
+var Test = require('./test/test.js');
 
 //get models
 var Scraper = require("./Scraper");
@@ -45,6 +46,9 @@ var Users = require('./models/Repositories.js');
 var strftime = require('strftime');
 
 Tor.init();                   //initializes the tor control socket
-Tor.startRandomizer(10000);   //start randomizing our exit ip
+Tor.startRandomizer(10000);   //start randomizing our exit ip 
 
-require('./test/test.js').testParamGenerator();
+//TODO FIND OUT OF PACKETS GET DROPPED WHEN WE CHANGE IP MID-REQUEST.  
+
+Test.testRecursePromise();
+Test.testTorRequest();

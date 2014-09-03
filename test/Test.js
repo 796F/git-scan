@@ -1,14 +1,16 @@
 var Repositories = require('../models/Repositories.js');
+var Tor = require('../utils/Tor.js');
+var Issues = require('../models/Issues.js');
 
 Test = {
   testTorRequest : function() {
     Tor.request({ 
-      protocol: 'https:',
-      hostname: 'api.github.com',
-      socksPort: 9050,
-      port: 443,
-      path: '/repos/Famous/famous/issues?state=closed&per_page=100&page=1',
-      headers: { 'User-Agent' : 'xiamike' }
+        protocol: 'https:',
+        hostname: 'api.github.com',
+        socksPort: 9050,
+        port: 443,
+        path: '/repos/Famous/famous/issues?state=open&per_page=100&page=1',
+        headers: { 'user-agent': 'node.js' }
     },
     function(response) {
       console.log('STATUS: ' + response.statusCode);
@@ -34,11 +36,27 @@ Test = {
       date.setDate(date.getDate()+1);    
       break;
     }
-
   },
   testParamGenerator : function() {
-    Repositories.getRepositoriesForParams('2014-08-08', 1, 'javascript', 'head').then(function(data){
+    Repositories.getForParams('2014-08-08', 1, 'javascript', 'head').then(function(data){
       console.log(data.total_count);
+    });
+  },
+  testIssuesGetParam : function() {
+    Issues.getForParams('Famous', 'famous', 'closed', 1).then(function(data) {
+      console.log(data[0]);
+    });
+  },
+  testRecursePromise : function () {
+    Issues.getClosedForRepository ('Famous', 'famous').then(function(data) {
+      test = {}
+      data.forEach(function(issue){
+        if(!test[issue.number]) {
+          test[issue.number] = true;
+        }else{
+          console.log(issue.number);
+        }
+      });
     });
   }
 }
