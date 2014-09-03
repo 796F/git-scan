@@ -6,6 +6,9 @@ var Q = require('q');
 
 var language = 'javascript';
 
+MAX_PAGES = 20;
+REPOS_PER_PAGE = 100;
+
 Repositories = {
   
   getForDay : function(dateString) {
@@ -16,9 +19,12 @@ Repositories = {
         var promises = [];
         var objects = [];
         objects.concat(data);
+        
         var numRepos = data.total_count;
-        var numPages = Math.ceil(numRepos / 100);
-        if(numPages > 20) numPages = 20;
+        var numPages = Math.ceil(numRepos / REPOS_PER_PAGE);
+
+        if(numPages > MAX_PAGES) numPages = MAX_PAGES;
+
         for (var i = 2; i <= numPages; i++) {
           if (i > 10 && end === 'head') end = 'tail';
           var promise = Repositories.getForParams(dateString, i, language, end);
@@ -43,14 +49,16 @@ Repositories = {
   *   returns a promise which will be resolved when api request finishes.  
   */
   getForParams : function(dateString, page_num, language, end) {
-    var endpoint = Util.buildUrlWithPath(GITHUB_API_ROOT_URL, 'search', 'repositories');
+    var endpoint = Util.buildUrlWithPath('search', 'repositories');
+    
+    var qualifiers = Util.buildGithubSearchQualifiers({
+      created: dateString,
+      language: language,
+      fork: false,
+    });
 
     var params = Util.buildUrlEncodedParameters({
-      q : Util.buildGithubSearchQualifiers({
-        created: dateString,
-        language: language,
-        fork: false,
-      }),
+      q : qualifiers,
       page: page_num,
       per_page: 100,
       sort: 'updated',
