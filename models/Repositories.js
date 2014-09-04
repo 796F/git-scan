@@ -11,7 +11,7 @@ var language = 'javascript';
 
 Repositories = {
   
-  getForDay : function(dateString) {
+  getForDay : function (dateString) {
     return Q.promise(function(resolve, reject, notify) {
       var end = 'head';
       Repositories.getForParams(dateString, 1, language, end)

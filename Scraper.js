@@ -23,7 +23,6 @@ function _getRemainingPages(dateString, totalObjects) {
         for(var i = 0; i < items.length; i++) {
           console.log(items[i]);
         }
-        //_addReposToDB(items);
       }
     });
     page++;
@@ -33,9 +32,6 @@ function _getRemainingPages(dateString, totalObjects) {
 Scraper = {
   getRepositoriesForDay : function (dateString){ 
     //make the request first, get the result.  
-    //var page = 1;
-    //var order = "asc";
-    //var urlPath = '/search/repositories?q=+created:' + dateString + '+language:javascript+fork:false&per_page=100&sort=updated&order=' + order + '&page=' + page;
     Repositories.getForDay(dateString)
     .then(function(arr) {
       for (var i = 0; i < arr.length; i++) {
@@ -44,8 +40,6 @@ Scraper = {
           console.log(objects[j]);
         }
       };
-    })
-    .then(function() {
     });
   }
 }
