@@ -50,7 +50,9 @@ Tor.startRandomizer(10000);   //start randomizing our exit ip
 
 //TODO FIND OUT OF PACKETS GET DROPPED WHEN WE CHANGE IP MID-REQUEST.  
 
-Test.testRecursePromise();
-Test.testTorRequest();
-Test.testGetRepos();
+Scraper.start();
+
+// Test.testRecursePromise();
+// Test.testTorRequest();
+// Test.testGetRepos();
 
