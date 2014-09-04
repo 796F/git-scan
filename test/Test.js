@@ -2,6 +2,8 @@ var Repositories = require('../models/Repositories.js');
 var Tor = require('../utils/Tor.js');
 var Issues = require('../models/Issues.js');
 
+var strftime = require('strftime');
+
 Test = {
   testTorRequest : function() {
     Tor.request({ 

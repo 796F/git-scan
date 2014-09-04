@@ -4,11 +4,41 @@ var Data = require('../utils/Data.js');
 var Util = require('../utils/Utility.js');
 var Q = require('q');
 
+MAX_PAGES = 20;
+REPOS_PER_PAGE = 100;
+
+var language = 'javascript';
+
 Repositories = {
+  
   getForDay : function (dateString) {
+    return Q.promise(function(resolve, reject, notify) {
+      var end = 'head';
+      Repositories.getForParams(dateString, 1, language, end)
+      .then(function(data) {
+        var promises = [];
+        var objects = [];
+        objects.concat(data);
+        
+        var numRepos = data.total_count;
+        var numPages = Math.ceil(numRepos / REPOS_PER_PAGE);
 
-    //call get getRepositoriesForDayAndPage once, get totla_count
+        if(numPages > MAX_PAGES) numPages = MAX_PAGES;
 
+        for (var i = 2; i <= numPages; i++) {
+          if (i > 10 && end === 'head') end = 'tail';
+          var promise = Repositories.getForParams(dateString, i, language, end);
+          promise.then(function(data) {
+            objects.concat(data);
+          });
+          promises.push(promise);
+        };
+        Q.all(promises)
+        .then(function(objects) {
+          resolve(objects);
+        });
+      });
+    });
   },
   /*
   *   dateString is a string in format '2014-08-08',
@@ -18,16 +48,17 @@ Repositories = {
   *
   *   returns a promise which will be resolved when api request finishes.  
   */
-  getForParams : function (dateString, page_num, language, end) {
-    
+  getForParams : function(dateString, page_num, language, end) {
     var endpoint = Util.buildUrlWithPath('search', 'repositories');
+    
+    var qualifiers = Util.buildGithubSearchQualifiers({
+      created: dateString,
+      language: language,
+      fork: false,
+    });
 
     var params = Util.buildUrlEncodedParameters({
-      q : Util.buildGithubSearchQualifiers({
-        created: dateString,
-        language: language,
-        fork: false,
-      }),
+      q : qualifiers,
       page: page_num,
       per_page: 100,
       sort: 'updated',

@@ -5,7 +5,7 @@ _.extend(GLOBAL, {
   TOR_SOCKS_PORT : 9050,
   TOR_CONTROL_PORT : 9051,
   TOR_AUTH_SIGNAL : 'AUTHENTICATE\n',
-  TOR_RANDOM_IP_SIGNAL : 'SIGNAL NEWNYM\r\n',
+  TOR_RANDOM_IP_SIGNAL : 'SIGNAL NEWNYM\r\n'
 });
 
 GLOBAL.MYSQL_CONFIG = {
@@ -52,3 +52,5 @@ Tor.startRandomizer(10000);   //start randomizing our exit ip
 
 Test.testRecursePromise();
 Test.testTorRequest();
+Test.testGetRepos();
+
