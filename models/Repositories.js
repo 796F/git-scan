@@ -3,6 +3,7 @@ var Tor = require('../utils/Tor.js');
 var Data = require('../utils/Data.js');
 var Util = require('../utils/Utility.js');
 var Q = require('q');
+var strftime = require('strftime');
 
 MAX_PAGES = 20;
 REPOS_PER_PAGE = 100;
@@ -11,7 +12,9 @@ var language = 'javascript';
 
 Repositories = {
   
-  getForDay : function (dateString) {
+  getForDay : function (date) {
+    var dateString = strftime('%F', date);
+
     return Q.promise(function(resolve, reject, notify) {
       var end = 'head';
       Repositories.getForParams(dateString, 1, language, end)
@@ -50,7 +53,6 @@ Repositories = {
   */
   getForParams : function(dateString, page_num, language, end) {
     var endpoint = Util.buildUrlWithPath('search', 'repositories');
-    
     var qualifiers = Util.buildGithubSearchQualifiers({
       created: dateString,
       language: language,

@@ -12,7 +12,6 @@ UTIL = {
       return args[key];
     }).join('/');
   },
-
   buildGithubSearchQualifiers : function (qualifiers) {
     return '+' + Object.keys(qualifiers).map(function(key) {
       return key + ":" + qualifiers[key];
