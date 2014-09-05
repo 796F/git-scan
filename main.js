@@ -45,14 +45,15 @@ var Scraper = require("./Scraper");
 var Users = require('./models/Repositories.js');
 var strftime = require('strftime');
 
-Tor.init();                   //initializes the tor control socket
-Tor.startRandomizer(10000);   //start randomizing our exit ip 
+// Tor.init();                   //initializes the tor control socket
+// Tor.startRandomizer(10000);   //start randomizing our exit ip 
 
-//TODO FIND OUT OF PACKETS GET DROPPED WHEN WE CHANGE IP MID-REQUEST.  
+// //TODO FIND OUT OF PACKETS GET DROPPED WHEN WE CHANGE IP MID-REQUEST.  
 
-Scraper.start();
+// Scraper.start();
 
 // Test.testRecursePromise();
 // Test.testTorRequest();
 // Test.testGetRepos();
+Tor.spawnInstances(5);
 

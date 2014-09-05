@@ -20,12 +20,7 @@ UTIL = {
   promiseForFunction : function ($asyncFn) {
     //takes an async function, creates a promise with its results passed.  
     return Q.Promise(function(resolve, reject, notify) {
-      setTimeout(function() {
-        //save the User from the response object using the requestId, then resolve with repository, request, and user. 
-        console.log('save user using', data.requestId, data.response.owner);
-        data.userId = 1;
-        resolve(data);
-      }, 1000);
+      
     });
   }
 }
