@@ -1,0 +1,26 @@
+{
+  "total_count": 1,
+  "incomplete_results": false,
+  "items": [
+    {
+      "login": "xiamike",
+      "id": 888943,
+      "avatar_url": "https://avatars.githubusercontent.com/u/888943?v=2",
+      "gravatar_id": "a01beda6a1b8f917e69539ee8e443a1e",
+      "url": "https://api.github.com/users/xiamike",
+      "html_url": "https://github.com/xiamike",
+      "followers_url": "https://api.github.com/users/xiamike/followers",
+      "following_url": "https://api.github.com/users/xiamike/following{/other_user}",
+      "gists_url": "https://api.github.com/users/xiamike/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/xiamike/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/xiamike/subscriptions",
+      "organizations_url": "https://api.github.com/users/xiamike/orgs",
+      "repos_url": "https://api.github.com/users/xiamike/repos",
+      "events_url": "https://api.github.com/users/xiamike/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/xiamike/received_events",
+      "type": "User",
+      "site_admin": false,
+      "score": 38.9686
+    }
+  ]
+}
