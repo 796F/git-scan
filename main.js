@@ -1,8 +1,6 @@
 var _ = require('underscore');
 
-_.extend(GLOBAL, {
-  
-});
+_.extend(GLOBAL, {});
 
 GLOBAL.MYSQL_CONFIG = {
   user : 'root',
@@ -11,23 +9,6 @@ GLOBAL.MYSQL_CONFIG = {
   password : '',
   database : 'git_scan_db',
   debug : false
-}
-
-GLOBAL.GITHUB_API_HTTPS = {
-  protocol: 'https:',
-  hostname: 'api.github.com',
-  socksPort: TOR_SOCKS_PORT,
-  port: 443,
-  path: '/',
-  headers: {'user-agent': 'node.js'}
-}
-
-GLOBAL.GITHUB_API_HTTP = {
-  protocol: 'http',
-  hostname: 'api.github.com',
-  socksPort: TOR_SOCKS_PORT,
-  port: 80,
-  path: '/'
 }
 
 //get utils
@@ -42,5 +23,3 @@ var Users = require('./models/Repositories.js');
 var strftime = require('strftime');
 
 // Scraper.start();
-
-GLOBAL.TorFactory = TorFactory.makeCircuits(5, 9500, 15000);

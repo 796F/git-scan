@@ -17,20 +17,9 @@ Test = {
     
   },
   testTorFactory : function() {
-    TorFactory.makeCircuits(10, 9050, 15000);
-
-    setTimeout(function(){
-      TorFactory.startRandomizer(10000);
-      TorFactory.circuits.forEach(function(circuit){
-        circuit.request('/rate_limit', function(error, respJson){
-          if(!error){
-            console.log(respJson);
-          }
-          
-        });
-      });
-    }, 1000);
-    // setTimeout(TorFactory.closeCircuits, 10000);
+    //make and terminate circuits.  
+    TorFactory.makeCircuits(5, 9500, 15000);
+    setTimeout(TorFactory.closeCircuits, 5000);
   }
 }
 

@@ -44,7 +44,7 @@ TorFactory = {
         if(!error){
           TorFactory.circuits.push(circuit);
           if(TorFactory.circuits.length == number_of_instances) {
-            //all circuits started up.  start randomizing.  
+            //all circuits started up.  start randomizing.
             TorFactory.startRandomizer(10000);
           }
         }
@@ -52,18 +52,21 @@ TorFactory = {
     }
   },
   closeCircuits : function() {
-    TorFactory.circuits.forEach(function(circuit){
+    while(TorFactory.circuits.length > 0){
+      var circuit = TorFactory.circuits.pop();
+      console.log('closing circuit on ', circuit.controlPort);
       circuit.terminate();
-    });
+    }
   },
-
   startRandomizer : function(interval_in_ms) {
     //minimum randomization interval is 10s, limited by Tor networks.  
     if(interval_in_ms < 10000) interval_in_ms = 10000;
+    
+    console.log(TorFactory.circuits.length + " circuits found, randomizing ...")
 
-    TorFactory.circuits.forEach(function(circuit){
-      circuit.changeIp();
-    });
+    for(var i=0; i<TorFactory.circuits.length; i++) {
+      TorFactory.circuits[i].changeIp();
+    }
 
     setTimeout(TorFactory.startRandomizer, interval_in_ms, interval_in_ms);
   }
@@ -99,15 +102,16 @@ Tor.prototype.init = function($callback) {
     if (_controlListening(data)){
       console.log('Connect to Tor control via socket ', self.controlPort);
       
-      if(!self.active){
-        self.active = true;
-        $callback(undefined, self);
-      }
-
       self.socket.connect(self.controlPort);
       
       self.socket.on('connect', function(){
         self.socket.write(TOR_AUTH_SIGNAL);
+
+        if(!self.active){
+          self.active = true;
+          $callback(undefined, self);
+        }
+
       });
       self.socket.on('data', function(data) {
         if(_addressData(data)){
@@ -141,7 +145,7 @@ Tor.prototype.terminate = function() {
 }
 
 Tor.prototype.changeIp = function() {
-  this.socket.write(TOR_RANDOM_IP_SIGNAL); 
+  this.socket.write(TOR_RANDOM_IP_SIGNAL);
 }
 
 //expects a callback with function(error, result) 
