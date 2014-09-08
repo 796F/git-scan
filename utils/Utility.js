@@ -1,4 +1,6 @@
 var Q = require('q');
+var HTTPS = require('https');
+var Tor = require('./Tor.js');
 
 UTIL = {
   buildUrlEncodedParameters : function (params){
@@ -17,15 +19,23 @@ UTIL = {
       return key + ":" + qualifiers[key];
     }).join('+');
   },
-  promiseForFunction : function ($asyncFn) {
+  promiseForTor : function (options) {
     //takes an async function, creates a promise with its results passed.  
     return Q.Promise(function(resolve, reject, notify) {
-      setTimeout(function() {
-        //save the User from the response object using the requestId, then resolve with repository, request, and user. 
-        console.log('save user using', data.requestId, data.response.owner);
-        data.userId = 1;
-        resolve(data);
-      }, 1000);
+      Tor.request(options, function(response) {
+        var data = '';
+        response.on('data', function (chunk) {
+          data += chunk;
+        });
+
+        response.on('end', function() {
+          resolve(JSON.parse(data));
+        });
+
+        response.on('error', function(error) {
+          reject(error);
+        });
+      });
     });
   }
 }

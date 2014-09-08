@@ -1,6 +1,7 @@
 var Repositories = require('../models/Repositories.js');
 var Tor = require('../utils/Tor.js');
 var Issues = require('../models/Issues.js');
+var Users = require('../models/Users.js');
 
 var strftime = require('strftime');
 
@@ -60,7 +61,14 @@ Test = {
         }
       });
     });
+  }, 
+  testUsersJs : function () {
+    Users.getReposForName('jaysingh')
+    .then(function(followers) {
+      console.log(followers);
+    });
   }
 }
 
 module.exports = Test;
+
