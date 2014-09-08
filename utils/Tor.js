@@ -161,7 +161,7 @@ Tor.prototype.request = function (options, $callback){
   return agent.get(options, $callback);
 }
 
-//get is basically requests but it handles the chunking and parsing for you!
+//get is basically requests but it handles the chunking and parsing and socksport adjusting for you!
 Tor.prototype.get = function (options, $callback) {
   var agent = options.protocol === 'https:' ? shttps : shttp;
   options.socksPort = this.socksPort;

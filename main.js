@@ -28,5 +28,6 @@ TorFactory.makeCircuits(5, 9500, 15000);
 
 setTimeout(function(){
   Test.testUsersJsGetReposForName();
+  Test.testUsersJsGetStarredForName();
 }, 1000);
 

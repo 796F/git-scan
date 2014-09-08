@@ -22,7 +22,16 @@ Test = {
     console.log('RUNNING TEST testUsersJsGetReposForName')
     Users.getReposForName('jaysingh')
     .then(function(repos) {
-      console.log(repos);
+      console.log('get repos for name returned', repos.length);
+      console.log('first one is ', repos[0]);
+    });
+  },
+  testUsersJsGetStarredForName : function() {
+    console.log('RUNNING TEST testUsersJsGetStarredForName')
+    Users.getStarredForName('jaysingh')
+    .then(function(starred){
+      console.log('get starred for name returned', starred.length);
+      console.log('first one is ', starred[0]);
     });
   },
   testTorFactory : function() {
