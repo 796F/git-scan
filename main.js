@@ -13,6 +13,23 @@ GLOBAL.MYSQL_CONFIG = {
   debug : false
 }
 
+GLOBAL.GITHUB_API_HTTPS = {
+  protocol: 'https:',
+  hostname: 'api.github.com',
+  socksPort: TOR_SOCKS_PORT,
+  port: 443,
+  path: '/',
+  headers: {'user-agent': 'node.js'}
+}
+
+GLOBAL.GITHUB_API_HTTP = {
+  protocol: 'http',
+  hostname: 'api.github.com',
+  socksPort: TOR_SOCKS_PORT,
+  port: 80,
+  path: '/'
+}
+
 //get utils
 var TorFactory = require('./utils/Tor.js');
 var Data = require('./utils/Data.js');
