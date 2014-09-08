@@ -18,10 +18,11 @@ Test = {
   testIssuesGetParam : function() {
     
   },
-  testUsersJs : function () {
+  testUsersJsGetReposForName : function () {
+    console.log('RUNNING TEST testUsersJsGetReposForName')
     Users.getReposForName('jaysingh')
-    .then(function(followers) {
-      console.log(followers);
+    .then(function(repos) {
+      console.log(repos);
     });
   },
   testTorFactory : function() {

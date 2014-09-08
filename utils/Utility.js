@@ -1,6 +1,6 @@
 var Q = require('q');
 var HTTPS = require('https');
-var Tor = require('./Tor.js');
+var TorFactory = require('./Tor.js');
 
 UTIL = {
   buildUrlEncodedParameters : function (params){
@@ -22,19 +22,12 @@ UTIL = {
   promiseForTor : function (options) {
     //takes an async function, creates a promise with its results passed.  
     return Q.Promise(function(resolve, reject, notify) {
-      Tor.request(options, function(response) {
-        var data = '';
-        response.on('data', function (chunk) {
-          data += chunk;
-        });
-
-        response.on('end', function() {
-          resolve(JSON.parse(data));
-        });
-
-        response.on('error', function(error) {
+      TorFactory.getCircuit().get(options, function(error, result) {
+        if(!error){
+          resolve(result);
+        }else{
           reject(error);
-        });
+        }
       });
     });
   }

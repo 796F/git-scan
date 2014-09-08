@@ -26,7 +26,7 @@ function _parseIp (circuitOutput) {
 
 TorFactory = {
   circuits : [],
-  makeCircuits : function(number_of_instances, base_socks_port, base_control_port) {
+  makeCircuits : function (number_of_instances, base_socks_port, base_control_port) {
     //spawn a bunch of isntances, save their pid, socks port, and control port information.  
     for(var i=0; i<number_of_instances; i++){
       var controlPort = base_control_port + i;
@@ -51,14 +51,14 @@ TorFactory = {
       });
     }
   },
-  closeCircuits : function() {
+  closeCircuits : function () {
     while(TorFactory.circuits.length > 0){
       var circuit = TorFactory.circuits.pop();
       console.log('closing circuit on ', circuit.controlPort);
       circuit.terminate();
     }
   },
-  startRandomizer : function(interval_in_ms) {
+  startRandomizer : function (interval_in_ms) {
     //minimum randomization interval is 10s, limited by Tor networks.  
     if(interval_in_ms < 10000) interval_in_ms = 10000;
     
@@ -69,6 +69,13 @@ TorFactory = {
     }
 
     setTimeout(TorFactory.startRandomizer, interval_in_ms, interval_in_ms);
+  },
+  getCircuit : function () {
+    var min = 0;
+    var max = TorFactory.circuits.length - 1;
+    var randomIndex = Math.floor(Math.random() * (max - min + 1)) + min;
+    console.log('returned circuit number ', randomIndex, 'on port,', TorFactory.circuits[randomIndex].controlPort);
+    return TorFactory.circuits[randomIndex];
   }
 }
 
@@ -157,6 +164,10 @@ Tor.prototype.request = function (options, $callback){
 //get is basically requests but it handles the chunking and parsing for you!
 Tor.prototype.get = function (options, $callback) {
   var agent = options.protocol === 'https:' ? shttps : shttp;
+  options.socksPort = this.socksPort;
+
+  console.log('CIRCUIT.GET options, ', options);
+
   agent.get(options, function(response){
     var data = '';
     response.on('data', function (chunk) {
