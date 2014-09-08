@@ -2,3 +2,4 @@ node_modules/
 *.mwb
 *.mwb.bak
 test.txt
+.DS_Store
