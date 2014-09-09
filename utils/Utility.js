@@ -1,5 +1,5 @@
 var Q = require('q');
-var HTTPS = require('https');
+var https = require('https');
 var TorFactory = require('./Tor.js');
 
 UTIL = {
@@ -30,6 +30,18 @@ UTIL = {
         }
       });
     });
+    // return Q.Promise(function(resolve, reject, notify) {
+    //   https.request(options, function(response) {
+    //     var str = ''
+    //     response.on('data', function (chunk) {
+    //       str += chunk;
+    //     });
+
+    //     response.on('end', function () {
+    //       resolve(JSON.parse(str));
+    //     });
+    //   }).end();
+    // });
   }
 }
   

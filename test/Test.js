@@ -2,6 +2,7 @@ var Repositories = require('../models/Repositories.js');
 var TorFactory = require('../utils/Tor.js');
 var Issues = require('../models/Issues.js');
 var Users = require('../models/Users.js');
+var Code = require('../models/Code.js');
 
 var strftime = require('strftime');
 
@@ -42,6 +43,12 @@ Test = {
     //make and terminate circuits.  
     TorFactory.makeCircuits(5, 9500, 15000);
     setTimeout(TorFactory.closeCircuits, 5000);
+  },
+  searchUserForString: function() {
+    Code.searchUserForString('readfwd', 'famous/core/engine')
+    .then(function(matches) {
+      console.log(matches);
+    });
   }
 }
 
