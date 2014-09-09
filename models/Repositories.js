@@ -1,5 +1,5 @@
 var _ = require('underscore');
-var Tor = require('../utils/Tor.js');
+var TorFactory = require('../utils/Tor.js');
 var Data = require('../utils/Data.js');
 var Util = require('../utils/Utility.js');
 var Q = require('q');
@@ -67,16 +67,20 @@ Repositories = {
       order : end === 'head' ? 'asc' : 'desc'
     });
 
-    var options = _.extend({}, GITHUB_API_HTTPS);
-    options.path = endpoint + params;
+    var options = {
+      protocol: 'https:',
+      hostname: 'api.github.com',
+      port: 443,
+      headers: {'user-agent': 'node.js'},
+      path: endpoint + params
+    }
 
     return Q.promise(function(resolve, reject, notify) {
-      Tor.request(options, function(response){
+      TorFactory.getCircuit().request(options, function(response){
         var data = '';
         response.on('data', function (chunk) {
           data += chunk;
         });
-
         response.on('end', function() {
           resolve(JSON.parse(data));
         });
@@ -86,14 +90,8 @@ Repositories = {
       });
     });
   },
-  addReposToDB: function(repos) {
-    for (var i = 0; i < repos.length; i++) {
-      //add repo to database
-      Data.insertUser(repos[i].owner, function(result) {
-        var test_repo_id = Data.insertRepository(result.insertId, repos[i], function(r) {
-        });
-      });
-    };
+  save: function(repos) {
+    
   }
 }
 

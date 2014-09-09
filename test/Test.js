@@ -9,8 +9,14 @@ Test = {
   testTorRequest : function() {
     
   },
-  testGetRepos : function () {
-    
+  testGetReposParam : function () {
+    Repositories.getForParams('2014-08-08', 2, 'javascript', 'head')
+    .then(function(repos){
+      console.log('get repos for params returned total count', repos.total_count);
+      console.log('inc results', repos.incomplete_results);
+      console.log('this batch had length', repos.items.length);
+      console.log('first one is ', repos.items[0]);
+    });
   },
   testParamGenerator : function() {
     
