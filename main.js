@@ -21,6 +21,7 @@ setTimeout(function(){
   // Test.testUsersJsGetReposForName();
   // Test.testUsersJsGetStarredForName();
   // Test.testIssuesGetParam();
-  Test.testGetReposParam();
+  // Test.testGetReposParam();
+  // Test.searchUserForString();
 }, 1000);
 
