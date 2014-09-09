@@ -3,7 +3,7 @@
 var Util = require('../utils/Utility.js');
 var _ = require('underscore');
 var Q = require('q');
-var Tor = require('../utils/Tor.js');
+var TorFactory = require('../utils/Tor.js');
 
 FIRST_PAGE = 1;
 
@@ -36,11 +36,17 @@ Issues = {
 
       function _recursivelyRequestAndBuildIssues(owner, repository, params, issues, $resolveFn, $rejectFn) {
         var endpoint = Util.buildUrlWithPath('repos', owner, repository, 'issues');
+        var paramString = Util.buildUrlEncodedParameters(params);
+        
+        var options = {
+          protocol: 'https:',
+          hostname: 'api.github.com',
+          port: 443,
+          headers: {'user-agent': 'node.js'},
+          path: endpoint + paramString
+        }
 
-        var options = _.extend({}, GITHUB_API_HTTPS);
-        options.path = endpoint + Util.buildUrlEncodedParameters(params);
-
-        Tor.request(options, function(response){
+        TorFactory.getCircuit().request(options, function(response){
           data = '';
           response.on('data', function (chunk) {
             data += chunk;
@@ -49,14 +55,9 @@ Issues = {
             var result = JSON.parse(data);
             if(result.length > 0){
               params.page++;
-              _recursivelyRequestAndBuildIssues(
-                owner, 
-                repository, 
-                params, 
-                issues.concat(result), 
-                $resolveFn, 
-                $rejectFn
-              );
+              _recursivelyRequestAndBuildIssues(owner, repository, params, 
+                issues.concat(result), $resolveFn, $rejectFn);
+
             }else{
               console.log(issues.length);
               $resolveFn(issues);
@@ -70,9 +71,9 @@ Issues = {
       }
 
       _recursivelyRequestAndBuildIssues(owner, repository, params, [], resolve, reject);
-
     });
   },
+  
   save : function (issuesList) {
 
   }

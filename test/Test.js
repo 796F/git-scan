@@ -16,7 +16,11 @@ Test = {
     
   },
   testIssuesGetParam : function() {
-    
+    Issues.getForParams('Famous', 'famous', 'open')
+    .then(function(issues){
+      console.log('get issues for params returned', issues.length);
+      console.log('first one is ', issues[0]);
+    });
   },
   testUsersJsGetReposForName : function () {
     console.log('RUNNING TEST testUsersJsGetReposForName')
