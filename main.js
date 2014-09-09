@@ -11,16 +11,9 @@ GLOBAL.MYSQL_CONFIG = {
   debug : false
 }
 
-//get utils
-var TorFactory = require('./utils/Tor.js');
-var Data = require('./utils/Data.js');
-var Q = require('q');
-var Test = require('./test/test.js');
-
-//get models
-var Scraper = require("./Scraper");
-var Users = require('./models/Repositories.js');
-var strftime = require('strftime');
+GLOBAL.SCRAPER_CONFIG = {
+  
+}
 
 TorFactory.makeCircuits(5, 9500, 15000);
 
