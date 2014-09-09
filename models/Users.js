@@ -7,7 +7,7 @@ Users = {
   getFollowersForName: function(name) {        
     var endpoint = Util.buildUrlWithPath('users', name, 'followers');
     var params = Util.buildUrlEncodedParameters({
-      per_page: 100,
+      per_page: 100
     });
     var options = {
       protocol: 'https:',
@@ -21,7 +21,7 @@ Users = {
   getFollowingForName: function(name) {
     var endpoint = Util.buildUrlWithPath('users', name, 'following');
     var params = Util.buildUrlEncodedParameters({
-      per_page: 100,
+      per_page: 100
     });
     var options = {
       protocol: 'https:',
@@ -35,7 +35,7 @@ Users = {
   getStarredForName: function(name) {
     var endpoint = Util.buildUrlWithPath('users', name, 'starred');
     var params = Util.buildUrlEncodedParameters({
-      per_page: 100,
+      per_page: 100
     });
     var options = {
       protocol: 'https:',
@@ -49,7 +49,7 @@ Users = {
   getOrganizationsForName: function(name) {
     var endpoint = Util.buildUrlWithPath('users', name, 'orgs');
     var params = Util.buildUrlEncodedParameters({
-      per_page: 100,
+      per_page: 100
     });
     var options = {
       protocol: 'https:',
@@ -63,7 +63,7 @@ Users = {
   getReposForName: function(name) {
     var endpoint = Util.buildUrlWithPath('users', name, 'repos');
     var params = Util.buildUrlEncodedParameters({
-      per_page: 100,
+      per_page: 100
     });
     var options = {
       protocol: 'https:',
