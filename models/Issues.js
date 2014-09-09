@@ -57,7 +57,6 @@ Issues = {
               params.page++;
               _recursivelyRequestAndBuildIssues(owner, repository, params, 
                 issues.concat(result), $resolveFn, $rejectFn);
-
             }else{
               console.log(issues.length);
               $resolveFn(issues);

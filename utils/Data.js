@@ -3,15 +3,6 @@
 var mysql = require('mysql');
 var connection = mysql.createConnection(MYSQL_CONFIG);
 
-var connection = mysql.createConnection({
-  user : 'root',
-  host : 'localhost',
-  port : 3306,
-  password : '',
-  database : 'git_scan_db',
-  debug : false
-});
-
 Data = {
   insertRequest : function(requestObject, $callback) {
     return Q.Promise(function(resolve, reject, notify) {

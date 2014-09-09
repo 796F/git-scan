@@ -3,10 +3,10 @@ var _ = require('underscore');
 _.extend(GLOBAL, {});
 
 GLOBAL.MYSQL_CONFIG = {
-  user : 'root',
-  host : 'localhost',
+  user : 'scraper',
+  host : '10.2.8.95',
   port : 3306,
-  password : '',
+  password : 'hey-ho-scrape-oh',
   database : 'git_scan_db',
   debug : false
 }
@@ -23,8 +23,6 @@ var Users = require('./models/Repositories.js');
 var strftime = require('strftime');
 
 TorFactory.makeCircuits(5, 9500, 15000);
-
-
 
 setTimeout(function(){
   // Test.testUsersJsGetReposForName();

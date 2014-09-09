@@ -75,20 +75,7 @@ Repositories = {
       path: endpoint + params
     }
 
-    return Q.promise(function(resolve, reject, notify) {
-      TorFactory.getCircuit().request(options, function(response){
-        var data = '';
-        response.on('data', function (chunk) {
-          data += chunk;
-        });
-        response.on('end', function() {
-          resolve(JSON.parse(data));
-        });
-        response.on('error', function(error) {
-          reject(error);
-        });
-      });
-    });
+    return Util.promiseForTor(options);
   },
   save: function(repos) {
     

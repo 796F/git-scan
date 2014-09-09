@@ -6,9 +6,6 @@ var Users = require('../models/Users.js');
 var strftime = require('strftime');
 
 Test = {
-  testTorRequest : function() {
-    
-  },
   testGetReposParam : function () {
     Repositories.getForParams('2014-08-08', 2, 'javascript', 'head')
     .then(function(repos){
@@ -17,9 +14,6 @@ Test = {
       console.log('this batch had length', repos.items.length);
       console.log('first one is ', repos.items[0]);
     });
-  },
-  testParamGenerator : function() {
-    
   },
   testIssuesGetParam : function() {
     Issues.getForParams('Famous', 'famous', 'open')
@@ -52,4 +46,3 @@ Test = {
 }
 
 module.exports = Test;
-
