@@ -11,7 +11,7 @@ REPOS_PER_PAGE = 100;
 var language = 'javascript';
 
 Repositories = {
-  getForDay : function (date) {
+  getFromGithubForDay : function (date) {
     var dateString = strftime('%F', date);
 
     return Q.promise(function(resolve, reject, notify) {
@@ -46,24 +46,26 @@ Repositories = {
   *   dateString is a string in format '2014-08-08',
   *   page_num is integer from 1 to last page
   *   language is a string, ie 'javascript', 'ruby', 'css'
-  *   end is a string either 'head' or 'tail'
-  *
+  *   fork is boolean
+  *   per_page is how many results, must be less than 100
+  *   sort is a string, stars, forks, or updated
+  *   order is string, asc or desc
   *   returns a promise which will be resolved when api request finishes.  
   */
-  getForParams : function(dateString, page_num, language, end) {
+  getFromGithubForParams : function(dateString, language, fork, page_num, per_page, sort, order) {
     var endpoint = Util.buildUrlWithPath('search', 'repositories');
     var qualifiers = Util.buildGithubSearchQualifiers({
       created: dateString,
       language: language,
-      fork: false,
+      fork: fork
     });
 
     var params = Util.buildUrlEncodedParameters({
       q : qualifiers,
       page: page_num,
-      per_page: 100,
-      sort: 'updated',
-      order : end === 'head' ? 'asc' : 'desc'
+      per_page: per_page,
+      sort: sort,
+      order : order
     });
 
     var options = {
@@ -73,13 +75,21 @@ Repositories = {
       headers: {'user-agent': 'node.js'},
       path: endpoint + params
     }
-
     return Util.promiseForTor(options);
   },
-
-  //THINGS THAT INSERT INTO DATABASE IS HERE.
-  save: function(repos) {
-    
+  
+  /*
+  functions for storing into the database.  
+  */
+  saveAll: function(repos) {
+    var promises = [];
+    for(var key in repos) {
+      promises.push(Data.insertRepository(repo[key]));
+    }
+    return Q.all(promises);
+  },
+  save : function(repo) {
+    return Data.insertRepository(repo);
   }
 }
 

@@ -9,13 +9,23 @@ var Repositories = require('../models/Repositories.js'),
     Commits = require('../models/Commits.js');
 
 Test = {
-  testGetReposParam : function () {
-    Repositories.getForParams('2014-08-08', 2, 'javascript', 'head')
+  testGetFromGithubForParams : function () {
+    var dateString = '2014-08-08', 
+        language = 'javascript', 
+        fork = false, 
+        page_num = 1, 
+        per_page = 100, 
+        sort = 'updated', 
+        order = 'asc';
+
+    Repositories.getFromGithubForParams(dateString, language, fork, page_num, per_page, sort, order)
     .then(function(repos){
       console.log('get repos for params returned total count', repos.total_count);
       console.log('inc results', repos.incomplete_results);
       console.log('this batch had length', repos.items.length);
       console.log('first one is ', repos.items[0]);
+    }, function(error){
+      console.log(error);
     });
   },
   testIssuesGetParam : function() {
@@ -46,7 +56,7 @@ Test = {
     TorFactory.makeCircuits(5, 9500, 15000);
     setTimeout(TorFactory.closeCircuits, 5000);
   },
-  searchUserForString: function() {
+  testSearchUserForString: function() {
     //searches user readfwd for string famous/core/engine
     Code.searchForUser('sagittaros', 'famous/core/engine')
     .then(function(matches) {
@@ -167,6 +177,9 @@ Test = {
       "score": 1.0
     }
     Data.insertRepository(1, repositoryObject).then(console.log);
+  },
+  testSetRepositoryFlag: function() {
+    Data.setRepositoryFlag(1, 'FAMOUS').then(console.log, console.log);
   },
   testCommitsForRepo: function() {
     console.log('testing commits for repo');

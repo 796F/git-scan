@@ -34,7 +34,6 @@ Data = {
   },
   insertUser : function(userObject) {
     _deleteUnwantedFieldsFromUser(userObject);
-
     return knex.table('users').insert(userObject);
   }
 }

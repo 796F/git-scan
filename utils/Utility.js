@@ -21,11 +21,9 @@ UTIL = {
   },
   promiseForTor : function (options) {
     //takes an async function, creates a promise with its results passed.  
-
     return Q.Promise(function(resolve, reject, notify) {
       TorFactory.getCircuit().get(options, function(error, result) {
         if(!error){
-          console.log(JSON.stringify(result).substring(0, 100));
           if(result.incomplete_results){
             //some api calls fail on github's side when valid results are not returned
             reject(result);
@@ -59,7 +57,7 @@ UTIL = {
             throw new Error("Promise retry failed" + promise.toString());
         return Q.delay(timeout)
         .then(function () {
-            console.log('retrying promise, times: ', times);
+            debug('retrying promise, times: ', times);
             return UTIL.retryPromiseForTor(options, timeout, times - 1);
         });
     });

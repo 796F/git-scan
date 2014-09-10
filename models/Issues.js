@@ -58,12 +58,10 @@ Issues = {
               _recursivelyRequestAndBuildIssues(owner, repository, params, 
                 issues.concat(result), $resolveFn, $rejectFn);
             }else{
-              console.log(issues.length);
               $resolveFn(issues);
             }
           });
           response.on('error', function(error) {
-            console.log('error!');
             $rejectFn(error);
           });
         });

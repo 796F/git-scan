@@ -54,7 +54,7 @@ TorFactory = {
   closeCircuits : function () {
     while(TorFactory.circuits.length > 0){
       var circuit = TorFactory.circuits.pop();
-      console.log('closing circuit on ', circuit.controlPort);
+      debug('closing circuit on ', circuit.controlPort);
       circuit.terminate();
     }
   },
@@ -62,7 +62,7 @@ TorFactory = {
     //minimum randomization interval is 10s, limited by Tor networks.  
     if(interval_in_ms < 10000) interval_in_ms = 10000;
     
-    console.log(TorFactory.circuits.length + " circuits found, randomizing ...")
+    debug(TorFactory.circuits.length + " circuits found, randomizing ...")
 
     for(var i=0; i<TorFactory.circuits.length; i++) {
       TorFactory.circuits[i].changeIp();
@@ -74,7 +74,7 @@ TorFactory = {
     var min = 0;
     var max = TorFactory.circuits.length - 1;
     var randomIndex = Math.floor(Math.random() * (max - min + 1)) + min;
-    console.log('returned circuit number ', randomIndex, 'on port,', TorFactory.circuits[randomIndex].controlPort);
+    debug('returned circuit number ', randomIndex, 'on port,', TorFactory.circuits[randomIndex].controlPort);
     return TorFactory.circuits[randomIndex];
   }
 }
@@ -107,7 +107,7 @@ Tor.prototype.init = function($callback) {
   self.circuit.stdout.on('data', function (data) {
     // triggered when the tor starts listening on its control port.  
     if (_controlListening(data)){
-      console.log('Connect to Tor control via socket ', self.controlPort);
+      debug('Connect to Tor control via socket ', self.controlPort);
       
       self.socket.connect(self.controlPort);
       
@@ -124,24 +124,24 @@ Tor.prototype.init = function($callback) {
         if(_addressData(data)){
           self.ip = _parseIp(data);
         }
-        console.log('socket data.  port: ', self.controlPort, "\ndata: ",  data.toString());
+        debug('socket data.  port: ', self.controlPort, "\ndata: ",  data.toString());
       });
       self.socket.on('error', function(error) {
-        console.log('socket error', error);
+        debug('socket error', error);
         // $callback(error.toString(), undefined);
       });
     }
   });
 
   self.circuit.stderr.on('data', function (data) {
-    console.log('circuit error', error);
+    debug('circuit error', error);
     // $callback(data.toString, undefined);
   });
   self.circuit.on('close', function (code) {
     if(code == 0){
       //running just fine
     }else{
-      console.log('circuit closed!! ', code);  
+      debug('circuit closed!! ', code);  
     }    
     // $callback(undefined, code);
   });
@@ -167,6 +167,7 @@ Tor.prototype.request = function (options, $callback){
 
 //get is basically requests but it handles the chunking and parsing and socksport adjusting for you!
 Tor.prototype.get = function (options, $callback) {
+
   var agent = options.protocol === 'https:' ? shttps : shttp;
   options.socksPort = this.socksPort;
 
