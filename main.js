@@ -7,6 +7,15 @@ GLOBAL.MYSQL_CONFIG = {
   debug : false
 }
 
+GLOBAL.LOCAL_MYSQL_CONFIG = {
+  user : 'root',
+  host : 'localhost',
+  port : 3306,
+  password : '',
+  database : 'git_scan_db',
+  debug : false
+}
+
 GLOBAL.SCRAPER_CONFIG = {
   
 }
@@ -29,8 +38,9 @@ setTimeout(function(){
   // Test.testUsersJsGetStarredForName();
   // Test.testIssuesGetParam();
   // Test.testGetReposParam();
-  // Test.searchUserForString();
-  //Test.testCommitsForRepo();
-  Test.searchUserForString();
+  // Test.testDataInsertUser();
+  // Test.testDataInsertRepository();
+  // Test.testCommitsForRepo();
+  
 }, 1000);
 
