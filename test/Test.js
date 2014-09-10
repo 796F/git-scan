@@ -1,10 +1,12 @@
+
 var Repositories = require('../models/Repositories.js'),
     TorFactory = require('../utils/Tor.js'),
     Issues = require('../models/Issues.js'),
     Users = require('../models/Users.js'),
     Code = require('../models/Code.js'),
     Data = require('../utils/Data.js'),
-    strftime = require('strftime');
+    strftime = require('strftime'),
+    Commits = require('../models/Commits.js');
 
 Test = {
   testGetReposParam : function () {
@@ -165,6 +167,13 @@ Test = {
       "score": 1.0
     }
     Data.insertRepository(1, repositoryObject).then(console.log);
+  },
+  testCommitsForRepo: function() {
+    console.log('testing commits for repo');
+    Commits.getForParams('jquery', 'jquery')
+    .then(function(commits) {
+      console.log(commits.length);
+    });
   }
 }
 

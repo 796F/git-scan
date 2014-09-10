@@ -21,6 +21,7 @@ UTIL = {
   },
   promiseForTor : function (options) {
     //takes an async function, creates a promise with its results passed.  
+
     return Q.Promise(function(resolve, reject, notify) {
       TorFactory.getCircuit().get(options, function(error, result) {
         if(!error){
@@ -36,18 +37,19 @@ UTIL = {
         }
       });
     });
-    // return Q.Promise(function(resolve, reject, notify) {
-    //   https.request(options, function(response) {
-    //     var str = ''
-    //     response.on('data', function (chunk) {
-    //       str += chunk;
-    //     });
+    /*
+    return Q.Promise(function(resolve, reject, notify) {
+      https.request(options, function(response) {
+        var str = ''
+        response.on('data', function (chunk) {
+          str += chunk;
+        });
 
-    //     response.on('end', function () {
-    //       resolve(JSON.parse(str));
-    //     });
-    //   }).end();
-    // });
+        response.on('end', function () {
+          resolve(JSON.parse(str));
+        });
+      }).end();
+    */
   },
   retryPromiseForTor : function (options, timeout, times) {
     return Util.promiseForTor(options).then(function (content) {
