@@ -1,7 +1,3 @@
-var _ = require('underscore');
-
-_.extend(GLOBAL, {});
-
 GLOBAL.MYSQL_CONFIG = {
   user : 'scraper',
   host : '10.2.8.95',
@@ -15,6 +11,10 @@ GLOBAL.SCRAPER_CONFIG = {
   
 }
 
+var _ = require('underscore');
+var TorFactory = require('./utils/Tor.js');
+var Test = require('./test/Test.js');
+
 TorFactory.makeCircuits(5, 9500, 15000);
 
 setTimeout(function(){
@@ -22,6 +22,6 @@ setTimeout(function(){
   // Test.testUsersJsGetStarredForName();
   // Test.testIssuesGetParam();
   // Test.testGetReposParam();
-  // Test.searchUserForString();
+  Test.searchUserForString();
 }, 1000);
 

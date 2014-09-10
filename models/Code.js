@@ -21,7 +21,10 @@ Code = {
       protocol: 'https:',
       hostname: 'api.github.com',
       port: 443,
-      headers: {'user-agent': 'node.js'},
+      headers: {
+        'user-agent': 'node.js',
+        'Accept': 'application/vnd.github.v3.text-match+json' //this tells github to give us the code fragment
+      },
       path: endpoint + params
     }
     return Util.promiseForTor(options);
