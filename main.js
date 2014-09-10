@@ -22,13 +22,15 @@ var _ = require('underscore');
 var TorFactory = require('./utils/Tor.js');
 var Test = require('./test/Test.js');
 
-TorFactory.makeCircuits(5, 9500, 15000);
+// TorFactory.makeCircuits(5, 9500, 15000);
 
 setTimeout(function(){
   // Test.testUsersJsGetReposForName();
   // Test.testUsersJsGetStarredForName();
   // Test.testIssuesGetParam();
   // Test.testGetReposParam();
+  // Test.searchUserForString();
+  //Test.testCommitsForRepo();
   Test.searchUserForString();
 }, 1000);
 
