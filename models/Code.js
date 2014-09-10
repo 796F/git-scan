@@ -1,8 +1,11 @@
-var Data = require('../utils/Data.js');
-var Util = require('../utils/Utility.js');
-var _ = require('underscore');
-
 //used to search for code within a repository and saving it to the database.  
+
+var Data = require('../utils/Data.js');
+    Util = require('../utils/Utility.js'),
+    _ = require('underscore').
+    TorFactory = require('../utils/Tor.js'),
+    Q = require('q');
+
 
 Code = {
   searchUserForString: function(user, searchString) {
@@ -27,7 +30,8 @@ Code = {
       },
       path: endpoint + params
     }
-    return Util.promiseForTor(options);
+
+    return Util.retryPromiseForTor(options, 1000, 5);
   }
 }
 

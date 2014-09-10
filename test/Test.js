@@ -46,7 +46,7 @@ Test = {
   },
   searchUserForString: function() {
     //searches user readfwd for string famous/core/engine
-    Code.searchUserForString('readfwd', 'famous/core/engine')
+    Code.searchUserForString('sagittaros', 'famous/core/engine')
     .then(function(matches) {
       console.log(JSON.stringify(matches));
     });

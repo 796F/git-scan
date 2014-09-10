@@ -160,7 +160,7 @@ Tor.prototype.request = function (options, $callback){
   var agent = options.protocol === 'https:' ? shttps : shttp;
   options.socksPort = this.socksPort;
 
-  console.log('CIRCUIT.REQUEST options, ', options);
+  debug('CIRCUIT.REQUEST options, ', options);
 
   return agent.get(options, $callback);
 }
@@ -170,7 +170,7 @@ Tor.prototype.get = function (options, $callback) {
   var agent = options.protocol === 'https:' ? shttps : shttp;
   options.socksPort = this.socksPort;
 
-  console.log('CIRCUIT.GET options, ', options);
+  debug('CIRCUIT.GET options, ', options);
 
   agent.get(options, function(response){
     var data = '';

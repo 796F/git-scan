@@ -11,6 +11,13 @@ GLOBAL.SCRAPER_CONFIG = {
   
 }
 
+GLOBAL.DEBUG = true;
+GLOBAL.debug = function(){
+  if(DEBUG) {
+    console.log.apply(this, arguments);
+  }
+}
+
 var _ = require('underscore');
 var TorFactory = require('./utils/Tor.js');
 var Test = require('./test/Test.js');
