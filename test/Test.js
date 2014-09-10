@@ -3,6 +3,7 @@ var TorFactory = require('../utils/Tor.js');
 var Issues = require('../models/Issues.js');
 var Users = require('../models/Users.js');
 var Code = require('../models/Code.js');
+var Commits = require('../models/Commits.js');
 
 var strftime = require('strftime');
 
@@ -48,6 +49,13 @@ Test = {
     Code.searchUserForString('readfwd', 'famous/core/engine')
     .then(function(matches) {
       console.log(matches);
+    });
+  },
+  testCommitsForRepo: function() {
+    console.log('testing commits for repo');
+    Commits.getForParams('jquery', 'jquery')
+    .then(function(commits) {
+      console.log(commits.length);
     });
   }
 }

@@ -21,27 +21,27 @@ UTIL = {
   },
   promiseForTor : function (options) {
     //takes an async function, creates a promise with its results passed.  
-    return Q.Promise(function(resolve, reject, notify) {
-      TorFactory.getCircuit().get(options, function(error, result) {
-        if(!error){
-          resolve(result);
-        }else{
-          reject(error);
-        }
-      });
-    });
     // return Q.Promise(function(resolve, reject, notify) {
-    //   https.request(options, function(response) {
-    //     var str = ''
-    //     response.on('data', function (chunk) {
-    //       str += chunk;
-    //     });
-
-    //     response.on('end', function () {
-    //       resolve(JSON.parse(str));
-    //     });
-    //   }).end();
+    //   TorFactory.getCircuit().get(options, function(error, result) {
+    //     if(!error){
+    //       resolve(result);
+    //     }else{
+    //       reject(error);
+    //     }
+    //   });
     // });
+    return Q.Promise(function(resolve, reject, notify) {
+      https.request(options, function(response) {
+        var str = ''
+        response.on('data', function (chunk) {
+          str += chunk;
+        });
+
+        response.on('end', function () {
+          resolve(JSON.parse(str));
+        });
+      }).end();
+    });
   }
 }
   

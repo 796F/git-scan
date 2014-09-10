@@ -11,7 +11,6 @@ REPOS_PER_PAGE = 100;
 var language = 'javascript';
 
 Repositories = {
-  
   getForDay : function (date) {
     var dateString = strftime('%F', date);
 

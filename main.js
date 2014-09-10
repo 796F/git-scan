@@ -22,7 +22,7 @@ var Scraper = require("./Scraper");
 var Users = require('./models/Repositories.js');
 var strftime = require('strftime');
 
-TorFactory.makeCircuits(5, 9500, 15000);
+// TorFactory.makeCircuits(5, 9500, 15000);
 
 setTimeout(function(){
   // Test.testUsersJsGetReposForName();
@@ -30,5 +30,6 @@ setTimeout(function(){
   // Test.testIssuesGetParam();
   // Test.testGetReposParam();
   // Test.searchUserForString();
+  Test.testCommitsForRepo();
 }, 1000);
 
