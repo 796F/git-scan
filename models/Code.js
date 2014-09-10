@@ -1,8 +1,11 @@
-var Data = require('../utils/Data.js');
-var Util = require('../utils/Utility.js');
-var _ = require('underscore');
-
 //used to search for code within a repository and saving it to the database.  
+
+var Data = require('../utils/Data.js');
+    Util = require('../utils/Utility.js'),
+    _ = require('underscore').
+    TorFactory = require('../utils/Tor.js'),
+    Q = require('q');
+
 
 Code = {
   searchUserForString: function(user, searchString) {
@@ -21,10 +24,14 @@ Code = {
       protocol: 'https:',
       hostname: 'api.github.com',
       port: 443,
-      headers: {'user-agent': 'node.js'},
+      headers: {
+        'user-agent': 'node.js',
+        'Accept': 'application/vnd.github.v3.text-match+json' //this tells github to give us the code fragment
+      },
       path: endpoint + params
     }
-    return Util.promiseForTor(options);
+
+    return Util.retryPromiseForTor(options, 1000, 5);
   }
 }
 

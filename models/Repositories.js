@@ -76,6 +76,8 @@ Repositories = {
 
     return Util.promiseForTor(options);
   },
+
+  //THINGS THAT INSERT INTO DATABASE IS HERE.
   save: function(repos) {
     
   }

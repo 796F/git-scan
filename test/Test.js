@@ -46,9 +46,10 @@ Test = {
     setTimeout(TorFactory.closeCircuits, 5000);
   },
   searchUserForString: function() {
-    Code.searchUserForString('readfwd', 'famous/core/engine')
+    //searches user readfwd for string famous/core/engine
+    Code.searchUserForString('sagittaros', 'famous/core/engine')
     .then(function(matches) {
-      console.log(matches);
+      console.log(JSON.stringify(matches));
     });
   },
   testCommitsForRepo: function() {

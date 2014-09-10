@@ -1,7 +1,3 @@
-var _ = require('underscore');
-
-_.extend(GLOBAL, {});
-
 GLOBAL.MYSQL_CONFIG = {
   user : 'scraper',
   host : '10.2.8.95',
@@ -11,16 +7,20 @@ GLOBAL.MYSQL_CONFIG = {
   debug : false
 }
 
-//get utils
-var TorFactory = require('./utils/Tor.js');
-var Data = require('./utils/Data.js');
-var Q = require('q');
-var Test = require('./test/test.js');
+GLOBAL.SCRAPER_CONFIG = {
+  
+}
 
-//get models
-var Scraper = require("./Scraper");
-var Users = require('./models/Repositories.js');
-var strftime = require('strftime');
+GLOBAL.DEBUG = true;
+GLOBAL.debug = function(){
+  if(DEBUG) {
+    console.log.apply(this, arguments);
+  }
+}
+
+var _ = require('underscore');
+var TorFactory = require('./utils/Tor.js');
+var Test = require('./test/Test.js');
 
 // TorFactory.makeCircuits(5, 9500, 15000);
 
@@ -30,6 +30,7 @@ setTimeout(function(){
   // Test.testIssuesGetParam();
   // Test.testGetReposParam();
   // Test.searchUserForString();
-  Test.testCommitsForRepo();
+  //Test.testCommitsForRepo();
+  Test.searchUserForString();
 }, 1000);
 
