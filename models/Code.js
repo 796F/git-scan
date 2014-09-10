@@ -8,15 +8,15 @@ var Data = require('../utils/Data.js');
 
 
 Code = {
-  searchUserForString: function(user, searchString) {
+  searchForUser: function(userLogin, codeString) {
     var endpoint = Util.buildUrlWithPath('search', 'code');
     var qualifiers = Util.buildGithubSearchQualifiers({
       fork: false,
-      user: user
+      user: userLogin
     });
 
     var params = Util.buildUrlEncodedParameters({
-      q : encodeURIComponent(searchString) + qualifiers,
+      q : encodeURIComponent(codeString) + qualifiers,
       per_page: 100
     });
 
