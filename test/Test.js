@@ -65,8 +65,8 @@ Test = {
   },
   testDataInsertUser: function() {
     var userObject = {
-      "login": "xiamike",
-      "id": 888943,
+      "login": "xtiamike",
+      "id": 888949,
       "avatar_url": "https://avatars.githubusercontent.com/u/888943?v=2",
       "gravatar_id": "a01beda6a1b8f917e69539ee8e443a1e",
       "url": "https://api.github.com/users/xiamike",
@@ -84,9 +84,12 @@ Test = {
       "site_admin": false,
       "score": 38.9686
     }
+    
     Data.insertUser(userObject).then(function(rows){
       console.log(rows);
-    });
+    });  
+  
+    
   },
   testDataInsertRepository: function() {
     var repositoryObject = {

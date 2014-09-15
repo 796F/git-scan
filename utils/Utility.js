@@ -35,20 +35,8 @@ UTIL = {
         }
       });
     });
-    /*
-    return Q.Promise(function(resolve, reject, notify) {
-      https.request(options, function(response) {
-        var str = ''
-        response.on('data', function (chunk) {
-          str += chunk;
-        });
-
-        response.on('end', function () {
-          resolve(JSON.parse(str));
-        });
-      }).end();
-    */
   },
+  //unlike promiseForTor, this method will retry the TorRequest until valid results are received.  
   retryPromiseForTor : function (options, timeout, times) {
     return Util.promiseForTor(options).then(function (content) {
         return content;

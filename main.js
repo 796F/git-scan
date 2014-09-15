@@ -16,10 +16,6 @@ GLOBAL.LOCAL_MYSQL_CONFIG = {
   debug : false
 }
 
-GLOBAL.SCRAPER_CONFIG = {
-  
-}
-
 GLOBAL.DEBUG = true;
 GLOBAL.debug = function(){
   if(DEBUG) {
@@ -30,18 +26,22 @@ GLOBAL.debug = function(){
 var _ = require('underscore');
 var TorFactory = require('./utils/Tor.js');
 var Test = require('./test/Test.js');
+var Scraper = require('./Scraper.js');
 
-TorFactory.makeCircuits(5, 9500, 15000);
+NUMBER_OF_TOR_CIRCUITS = 5
+BASE_SOCKS_PORT = 9050
+BASE_CONTROL_PORT = 15000
+
+TorFactory.makeCircuits(NUMBER_OF_TOR_CIRCUITS, BASE_SOCKS_PORT, BASE_CONTROL_PORT);
+
+TEN_SECONDS = 10000
 
 setTimeout(function(){
-  // Test.testUsersJsGetReposForName();
-  // Test.testUsersJsGetStarredForName();
-  // Test.testIssuesGetParam();
-  // Test.testDataInsertUser();
+  //give some time for TOR circuits to start up and connect.
+  try{
+    Scraper.start();  
+  }catch(error){
+    console.log(error);
+  }
   // Test.testDataInsertRepository();
-  // Test.testCommitsForRepo();
-  // Test.testGetFromGithubForParams();
-  // Test.testSearchUserForString();
-  Test.testSetRepositoryFlag();
 }, 1000);
-

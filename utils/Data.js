@@ -14,12 +14,22 @@ Data = {
 
     _deleteUnwantedFieldsFromRepository(repositoryObject);
     
-    //clean ISO8601 timestamps to mysql compliant format
-    repositoryObject.created_at = cleanTimestamp(repositoryObject.created_at);
-    repositoryObject.updated_at = cleanTimestamp(repositoryObject.updated_at);
-    repositoryObject.pushed_at = cleanTimestamp(repositoryObject.pushed_at);
-
-    return knex.table('repositories').insert(repositoryObject);
+    //convert string to timestamp for storage.
+    repositoryObject.created_at = Date.parse(repositoryObject.created_at)/1000;
+    repositoryObject.updated_at = Date.parse(repositoryObject.updated_at)/1000;
+    repositoryObject.pushed_at = Date.parse(repositoryObject.pushed_at)/1000;
+    
+    return knex.table('repositories').insert(repositoryObject)
+    .then(function(data){
+      return data;
+    }, function(error){
+      return knex.table('repositories').select('idrepositories').where({
+        id : repositoryObject.id,
+        full_name : repositoryObject.full_name
+      }).limit(1).then(function(repositoryIds){
+        return [repositoryIds[0].idrepositories];
+      });
+    });
   },
   appendRepositoryState : function(repositoryId, repositoryObject){
     //adds the current state about the repo
@@ -27,20 +37,29 @@ Data = {
   setRepositoryFlag : function(repositoryId, flag){
     //modify a repository's flag (ex meteor, famous, famous-angular, ionic, etc)
     return knex.table('repositories')
-    .where('idrepositories', '=', repositoryId)
+    .where({
+      idrepositories: repositoryId
+    })
     .update({
       'flag' : flag
     });
   },
   insertUser : function(userObject) {
     _deleteUnwantedFieldsFromUser(userObject);
-    return knex.table('users').insert(userObject);
-  }
-}
 
-cleanTimestamp = function(timeString) {
-  // expect 2014-08-08T13:10:03Z -> 2014-08-08 13:10:03
-  return timeString.replace("T", " ").replace("Z", "");
+    return knex.table('users').insert(userObject)
+    .then(function(data){
+      return data;
+    }, function(error){
+      //if theres a duplicate, just get and return the original
+      return knex.table('users').select('idusers').where({
+        login: userObject.login,
+        id: userObject.id
+      }).limit(1).then(function(userIds){
+        return [userIds[0].idusers];
+      });
+    })
+  }
 }
 
 function _deleteUnwantedFieldsFromUser(userObject){

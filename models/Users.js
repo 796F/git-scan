@@ -73,6 +73,16 @@ Users = {
       path: endpoint + params
     }
     return Util.promiseForTor(options);
+  },
+  saveAllFromRepos: function(repos){
+    debugger;
+    debug('REPOS LENGTH:', repos.length);
+    var promises = [];
+    for(var repoKey in repos){
+      promises.push(Data.insertUser(repos[repoKey].owner));
+    }
+    debug('INSERT USER PROMISES LENGTH:', promises.length);
+    return Q.all(promises);
   }
 }
 

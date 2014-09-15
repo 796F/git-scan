@@ -124,7 +124,7 @@ Tor.prototype.init = function($callback) {
         if(_addressData(data)){
           self.ip = _parseIp(data);
         }
-        debug('socket data.  port: ', self.controlPort, "\ndata: ",  data.toString());
+        // debug('socket data.  port: ', self.controlPort, "\ndata: ",  data.toString());
       });
       self.socket.on('error', function(error) {
         debug('socket error', error);
@@ -170,20 +170,35 @@ Tor.prototype.get = function (options, $callback) {
 
   var agent = options.protocol === 'https:' ? shttps : shttp;
   options.socksPort = this.socksPort;
-
+  //required for node issue, https://github.com/joyent/node/issues/5360
+  options.secureOptions = require('constants').SSL_OP_NO_TLSv1_2
+  
   debug('CIRCUIT.GET options, ', options);
 
-  agent.get(options, function(response){
+  var request = agent.get(options, function(response){
+
+    var status = response.statusCode;
+    var limit = response.headers['x-ratelimit-limit'];
+    var remaining = response.headers['x-ratelimit-remaining'];
+
+    console.log('limit', limit, 'remaining', remaining);
+    //LOOK AT HEADERS TO GET RATE LIMIT.
+    
+    var start = Date.now();
     var data = '';
     response.on('data', function (chunk) {
       data += chunk;
     });
     response.on('end', function() {
+      var end = Date.now();
+      debug('request on port', options.socksPort, 'TOOK', end - start, 'ms to complete');
       $callback(undefined, JSON.parse(data));
     });
-    response.on('error', function(error) {
-      $callback(error, undefined);
-    });
+  });
+
+  request.on('error', function(error) {
+    debugger;
+    $callback(error, undefined);
   });
 }
 
