@@ -8,16 +8,39 @@ var Data = require('../utils/Data.js');
 
 
 Code = {
-  searchForUser: function(userLogin, codeString) {
+  searchInRepo: function(repository, codeString) {
+    return Code.searchForParams(undefined, repository, codeString, 100, 1, false)
+    .then(function(response){
+      if(response.items == undefined){
+        console.log('UNDEFINED RESP', response, 'SEARCHING', repository);
+      }
+      return Data.markRepoNameAsScanned(repository)
+      .then(function(marked){
+        return response.items;
+      });      
+    });
+  },
+  searchInUser: function(userLogin, codeString) {
+    return Code.searchForParams(userLogin, undefined, codeString, 100, 1, false)
+    .then(function(response){
+      if(response.items == undefined){
+        console.log('UNDEFINED RESP', response);
+      }
+      return response.items;
+    });
+  },
+  searchForParams: function(user, repo, codeString, per_page, page_num, fork) {
     var endpoint = Util.buildUrlWithPath('search', 'code');
     var qualifiers = Util.buildGithubSearchQualifiers({
-      fork: false,
-      user: userLogin
+      fork: fork,
+      user: user,
+      repo: repo
     });
 
     var params = Util.buildUrlEncodedParameters({
       q : encodeURIComponent(codeString) + qualifiers,
-      per_page: 100
+      per_page: per_page,
+      page: page_num
     });
 
     var options = {
@@ -32,6 +55,17 @@ Code = {
     }
 
     return Util.retryPromiseForTor(options, 1000, 5);
+  },
+  getUserLogin: function(userId) {
+    return Data.getFullNameForId(userId);
+  },
+  saveAll : function(codeMatches) {
+    debugger;
+    var promises = [];
+    for(var key in codeMatches){
+      promises.push(Data.insertCode(codeMatches[key]));
+    }
+    return Q.all(promises);
   }
 }
 

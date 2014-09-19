@@ -8,7 +8,12 @@ var strftime = require('strftime');
 MAX_PAGES = 20;
 REPOS_PER_PAGE = 100;
 
+Signature = {
+  FAMOUS: 'famous/core/Engine'
+}
+
 Repositories = {
+
   getFromGithubForDateAndLanguage : function (date, language) {
     var dateString = strftime('%F', date);
     return Q.promise(function(resolve, reject, notify) {
@@ -29,12 +34,11 @@ Repositories = {
         }
         
         Q.all(promises)
-        .then(function(objects) {
+        .then(function(requestResponses) {
           var repos = [];
           //each object in objects is a page, so go through and return only the repos.  
-          for(var i=0; i< objects.length; i++){
-            // repos.push.apply(this.repos, objects[i].items);
-            repos = repos.concat(objects[i].items);
+          for(var i=0; i< requestResponses.length; i++){
+            repos = repos.concat(requestResponses[i].items);
           }
           resolve(repos);
         });
@@ -81,7 +85,6 @@ Repositories = {
   functions for storing into the database.  
   */
   saveAll: function(userIds, repos) {
-    debugger;
     if(userIds.length == repos.length){
       var promises = [];
       for(var i=0; i< userIds.length; i++) {
@@ -90,7 +93,6 @@ Repositories = {
         );
       }
       debug('promises LENGTH: ', promises.length);
-      debugger;
       return Q.all(promises);
     }else{
       throw Error('USERID ARRAY NOT SAME SIZE AS REPO ARRAY');
@@ -98,6 +100,35 @@ Repositories = {
   },
   save : function(repo) {
     return Data.insertRepository(repo);
+  },
+  needScan : function() {
+    //returns the top X repos that most needs to be scanned based on last_scanned date.
+    //this should be limited by the number of circuits we have
+    
+    return Data.getReposNeedScan(TorFactory.activeCircuitCount() * 3);
+  },
+  scanAll: function(repos) {
+    //given a list of repos scan them for a signature.  
+    var promises = [];
+    for(var key in repos){
+      promises.push(Code.searchInRepo(repos[key], Signature.FAMOUS));
+    }
+    return Q.all(promises)
+    .then(function(requestResponses){
+      var codeMatches = [];
+      requestResponses.forEach(function(response){
+        if(response){
+          response.forEach(function(file){
+            file.text_matches = file.text_matches.map(function(codeObject){
+              codeObject.repository = file.repository;
+              return codeObject;
+            });
+            codeMatches = codeMatches.concat(file.text_matches);
+          });  
+        }
+      });
+      return codeMatches;
+    });
   }
 }
 

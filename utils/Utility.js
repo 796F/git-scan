@@ -16,7 +16,9 @@ UTIL = {
   },
   buildGithubSearchQualifiers : function (qualifiers) {
     return '+' + Object.keys(qualifiers).map(function(key) {
-      return key + ":" + qualifiers[key];
+      if(qualifiers[key] != undefined){
+        return key + ":" + qualifiers[key];  
+      }
     }).join('+');
   },
   promiseForTor : function (options) {
@@ -24,8 +26,9 @@ UTIL = {
     return Q.Promise(function(resolve, reject, notify) {
       TorFactory.getCircuit().get(options, function(error, result) {
         if(!error){
-          if(result.incomplete_results){
+          if(result.incomplete_results || result.message && result.message.indexOf('API rate limit exceeded') != -1){
             //some api calls fail on github's side when valid results are not returned
+            //other times we hit a rate limit, so should delay.  
             reject(result);
           }else{
             resolve(result);

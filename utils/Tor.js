@@ -62,7 +62,7 @@ TorFactory = {
     //minimum randomization interval is 10s, limited by Tor networks.  
     if(interval_in_ms < 10000) interval_in_ms = 10000;
     
-    debug(TorFactory.circuits.length + " circuits found, randomizing ...")
+    // debug(TorFactory.circuits.length + " circuits found, randomizing ...")
 
     for(var i=0; i<TorFactory.circuits.length; i++) {
       TorFactory.circuits[i].changeIp();
@@ -76,6 +76,9 @@ TorFactory = {
     var randomIndex = Math.floor(Math.random() * (max - min + 1)) + min;
     debug('returned circuit number ', randomIndex, 'on port,', TorFactory.circuits[randomIndex].controlPort);
     return TorFactory.circuits[randomIndex];
+  },
+  activeCircuitCount: function (){
+    return TorFactory.circuits.length;
   }
 }
 
@@ -160,6 +163,9 @@ Tor.prototype.request = function (options, $callback){
   var agent = options.protocol === 'https:' ? shttps : shttp;
   options.socksPort = this.socksPort;
 
+  //required for node issue, https://github.com/joyent/node/issues/5360
+  options.secureOptions = require('constants').SSL_OP_NO_TLSv1_2
+  
   debug('CIRCUIT.REQUEST options, ', options);
 
   return agent.get(options, $callback);
@@ -197,7 +203,6 @@ Tor.prototype.get = function (options, $callback) {
   });
 
   request.on('error', function(error) {
-    debugger;
     $callback(error, undefined);
   });
 }

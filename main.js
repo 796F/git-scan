@@ -28,7 +28,7 @@ var TorFactory = require('./utils/Tor.js');
 var Test = require('./test/Test.js');
 var Scraper = require('./Scraper.js');
 
-NUMBER_OF_TOR_CIRCUITS = 5
+NUMBER_OF_TOR_CIRCUITS = 20
 BASE_SOCKS_PORT = 9050
 BASE_CONTROL_PORT = 15000
 
@@ -38,10 +38,7 @@ TEN_SECONDS = 10000
 
 setTimeout(function(){
   //give some time for TOR circuits to start up and connect.
-  try{
-    Scraper.start();  
-  }catch(error){
-    console.log(error);
-  }
-  // Test.testDataInsertRepository();
+
+  Scraper.start();
+  // Test.testSetRepositoryFlag();
 }, 1000);

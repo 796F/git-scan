@@ -5,15 +5,30 @@ var knex = require('knex')({
   debug: false
 });
 
+ONE_RESULT = 1
+FIELDS_TO_KEEP = {
+  User : ['login', 'id', 'avatar_url', 'url', 'type', 'site_admin', 'html_url', 'score'],
+  Code : ['name', 'url', 'path', 'sha', 'html_url', 'text_matches', 'repository_id'],
+  Repository : ['id', 'name', 'full_name', 'description', 'created_at', 'updated_at', 
+  'pushed_at', 'language', 'has_downloads', 'has_wiki', 'mirror_url', 'default_branch', 
+  'score', 'homepage', 'html_url', 'has_pages']
+}
+
+function _filterOut(object, whitelist){
+  var cleanedObject = {};
+  whitelist.forEach(function(fieldName){
+    cleanedObject[fieldName] = object[fieldName];
+  });
+  return cleanedObject;
+}
+
 Data = {
   insertRequest : function(requestObject, $callback) {
     
   },
   insertRepository : function (ownerId, repositoryObject) {
+    repositoryObject = _filterOut(repositoryObject, FIELDS_TO_KEEP.Repository);
     repositoryObject.owner_id = ownerId;
-
-    _deleteUnwantedFieldsFromRepository(repositoryObject);
-    
     //convert string to timestamp for storage.
     repositoryObject.created_at = Date.parse(repositoryObject.created_at)/1000;
     repositoryObject.updated_at = Date.parse(repositoryObject.updated_at)/1000;
@@ -26,8 +41,12 @@ Data = {
       return knex.table('repositories').select('idrepositories').where({
         id : repositoryObject.id,
         full_name : repositoryObject.full_name
-      }).limit(1).then(function(repositoryIds){
-        return [repositoryIds[0].idrepositories];
+      }).limit(ONE_RESULT).then(function(repositoryIds){
+        if(repositoryIds.length > 0) {
+          return repositoryIds[0].idrepositories;
+        }else{
+          throw new Error('UNEXPECTED ROW FORMAT FOR INSERT REPOS');
+        }
       });
     });
   },
@@ -41,118 +60,97 @@ Data = {
       idrepositories: repositoryId
     })
     .update({
-      'flag' : flag
+      flag : flag
     });
   },
   insertUser : function(userObject) {
-    _deleteUnwantedFieldsFromUser(userObject);
-
+    userObject = _filterOut(userObject, FIELDS_TO_KEEP.User);
     return knex.table('users').insert(userObject)
     .then(function(data){
       return data;
     }, function(error){
-      //if theres a duplicate, just get and return the original
       return knex.table('users').select('idusers').where({
         login: userObject.login,
         id: userObject.id
-      }).limit(1).then(function(userIds){
-        return [userIds[0].idusers];
+      }).limit(ONE_RESULT).then(function(userIds){
+        if(userIds.length > 0) {
+          return userIds[0].idusers;
+        }else{
+          throw new Error('UNEXPECTED ROW FORMAT FOR SELECT USERS');
+        }
       });
     })
-  }
-}
-
-function _deleteUnwantedFieldsFromUser(userObject){
-  delete userObject.gravatar_id;
-  delete userObject.followers_url;
-  delete userObject.following_url;
-  delete userObject.gists_url;
-  delete userObject.starred_url;
-  delete userObject.subscriptions_url;
-  delete userObject.organizations_url;
-  delete userObject.repos_url;
-  delete userObject.events_url;
-  delete userObject.received_events_url;
-}
-
-function _extractRepositoryState(repositoryObject){
-  return {
-    repository_id: repositoryObject.repository_id,
-    has_issues: repositoryObject.has_issues,
-    size: repositoryObject.size,
-    stargazers_count: repositoryObject.stargazers_count,
+  },
+  insertCode: function(codeObject){
+    debugger;
+    if(codeObject && codeObject.repository) {
+      return Data.getRepositoryForFullName(codeObject.repository.full_name)
+      .then(function(repository_id){
+        Data.setRepositoryFlag(repository_id, 'FAMOUS').then(console.log, console.log, console.log);
+        codeObject.repository_id = repository_id;
+        codeObject.text_matches = JSON.stringify(codeObject.text_matches);
+        codeObject = _filterOut(codeObject, FIELDS_TO_KEEP.Code);
+        return knex.table('code').insert(codeObject);
+      });
+    }else{
+      return undefined;
+    }
     
-    watchers: repositoryObject.watchers,
-    watchers_count: repositoryObject.watchers_count,
-    
-    forks: repositoryObject.forks,
-    forks_count: repositoryObject.forks_count,
+  },
+  getRepositoryForFullName : function(full_name){
+    return knex.table('repositories').select('idrepositories').where({
+      full_name : full_name
+    }).limit(ONE_RESULT).then(function(rows){
+      if(rows.length > 0) {
+        return rows[0].idrepositories;
+      }else{
+        throw new Error('UNEXPECTED ROW FORMAT FOR GET REPO BY FULL NAME');
+      }
+    });
+  },
+  getFullNameForId : function(userId){
+    return knex.table('users').select('idusers').where({
+      idusers: userId
+    }).limit(ONE_RESULT).then(function(rows){
+      if(rows.length > 0){
 
-    open_issues: repositoryObject.open_issues,
-    open_issues_count: repositoryObject.open_issues_count,
-    timestamp: new Date()
+      }else{
+        throw new Error('UNEXPECTED ROWS ')
+      }
+    });
+  },
+  getLimitNotScannedRepos : function(limit) {
+    return knex.table('repositories').select('full_name').whereNull('flag')
+    .limit(limit)
+    .orderBy('created_at', 'desc')
+    .then(function(rows){
+      //rows is nested [ { owner_id: 906 }, { owner_id: 907 } ... , ... ]
+      return rows.map(function(row){
+        return row.full_name;
+      });
+    });
+  },  
+  getReposNeedScan: function(limit){
+    return knex.table('repositories').select('full_name')
+    .orderBy('last_scanned', 'asc').limit(limit)
+    .then(function(repos){
+      return repos.map(function(repo){
+        debug(repo.full_name);
+        return repo.full_name;
+      });
+    });
+  },
+  markRepoNameAsScanned: function(full_name){
+    //oddly enough this does not work when called from certain places.  
+    //ex.  imoved the code from Repository.scanAll to Code.searchInRepo, and started working!
+    return knex.table('repositories')
+    .where({
+      full_name: full_name
+    })
+    .update({
+      last_scanned : Math.round(Date.now()/1000)
+    });
   }
-}
-
-function _deleteUnwantedFieldsFromRepository(repositoryObject){
-  //delete time dependent properties
-  delete repositoryObject.has_issues;
-  delete repositoryObject.size;
-  delete repositoryObject.stargazers_count;
-  
-  delete repositoryObject.watchers;
-  delete repositoryObject.watchers_count;
-  
-  delete repositoryObject.forks;
-  delete repositoryObject.forks_count;
-  
-  delete repositoryObject.open_issues;
-  delete repositoryObject.open_issues_count;
-  
-  //delete unused properties
-  delete repositoryObject.owner;
-  delete repositoryObject.private;
-  delete repositoryObject.fork;
-  delete repositoryObject.url;
-  delete repositoryObject.forks_url;
-  delete repositoryObject.keys_url;
-  delete repositoryObject.collaborators_url;
-  delete repositoryObject.teams_url;
-  delete repositoryObject.hooks_url;
-  delete repositoryObject.issue_events_url;
-  delete repositoryObject.events_url;
-  delete repositoryObject.assignees_url;
-  delete repositoryObject.branches_url;
-  delete repositoryObject.tags_url;
-  delete repositoryObject.blobs_url;
-  delete repositoryObject.git_tags_url;
-  delete repositoryObject.git_refs_url;
-  delete repositoryObject.trees_url;
-  delete repositoryObject.statuses_url;
-  delete repositoryObject.languages_url;
-  delete repositoryObject.stargazers_url;
-  delete repositoryObject.contributors_url;
-  delete repositoryObject.subscribers_url;
-  delete repositoryObject.subscription_url;
-  delete repositoryObject.commits_url;
-  delete repositoryObject.git_commits_url;
-  delete repositoryObject.comments_url;
-  delete repositoryObject.issue_comment_url;
-  delete repositoryObject.contents_url;
-  delete repositoryObject.compare_url;
-  delete repositoryObject.merges_url;
-  delete repositoryObject.archive_url;
-  delete repositoryObject.downloads_url;
-  delete repositoryObject.issues_url;
-  delete repositoryObject.pulls_url;
-  delete repositoryObject.milestones_url;
-  delete repositoryObject.notifications_url;
-  delete repositoryObject.labels_url;
-  delete repositoryObject.releases_url;
-  delete repositoryObject.git_url;
-  delete repositoryObject.ssh_url;
-  delete repositoryObject.clone_url;
-  delete repositoryObject.svn_url;
 }
 
 module.exports = Data;
